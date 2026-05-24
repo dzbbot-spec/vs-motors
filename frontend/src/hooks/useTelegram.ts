@@ -1,11 +1,19 @@
-import WebApp from '@twa-dev/sdk'
+import { useState, useEffect } from 'react'
+import { getUser, getInitData } from '../lib/telegram'
 
 export function useTelegram() {
-  const user = WebApp.initDataUnsafe?.user
-  const initData = WebApp.initData
+  const [user, setUser] = useState(() => getUser())
+  const [initData, setInitData] = useState(() => getInitData())
 
-  const isOwner =
-    !!user && String(user.id) === import.meta.env.VITE_OWNER_TG_ID
+  // Telegram может заполнить initDataUnsafe после первого рендера
+  useEffect(() => {
+    const u = getUser()
+    const d = getInitData()
+    if (u) setUser(u)
+    if (d) setInitData(d)
+  }, [])
 
-  return { user, initData, isOwner, WebApp }
+  const isOwner = !!user && String(user.id) === import.meta.env.VITE_OWNER_TG_ID
+
+  return { user, initData, isOwner }
 }
