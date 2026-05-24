@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { api } from '../api/client'
-import { ListingFull } from '../types'
+import type { ListingFull } from '../types'
 import ListingForm from '../components/ListingForm'
 
 export default function EditListingPage() {

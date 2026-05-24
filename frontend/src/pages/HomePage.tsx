@@ -7,7 +7,7 @@ import CardSkeleton from '../components/CardSkeleton'
 import './HomePage.css'
 
 export default function HomePage() {
-  const { items, loading, initialLoading, hasNext, error, loadMore } = useListings()
+  const { items, loading, initialLoading, error, loadMore } = useListings()
   const { isOwner } = useTelegram()
   const navigate = useNavigate()
   const sentinelRef = useRef<HTMLDivElement>(null)

@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { FormData } from './types'
+import type { FormData } from './types'
 import './Form.css'
 
 interface Props {

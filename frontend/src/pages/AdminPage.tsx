@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../api/client'
-import { Listing } from '../types'
+import type { Listing } from '../types'
 import { useBackButton } from '../hooks/useBackButton'
 import './AdminPage.css'
 

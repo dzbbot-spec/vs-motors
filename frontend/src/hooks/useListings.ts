@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { api } from '../api/client'
-import { Listing, ListingsPage } from '../types'
+import type { Listing, ListingsPage } from '../types'
 
 export function useListings() {
   const [items, setItems] = useState<Listing[]>([])

@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { api } from '../api/client'
 import { useTelegram } from '../hooks/useTelegram'
 import { useBackButton } from '../hooks/useBackButton'
-import { ListingFull } from '../types'
+import type { ListingFull } from '../types'
 import PhotoGallery from '../components/PhotoGallery'
 import './ListingDetailPage.css'
 

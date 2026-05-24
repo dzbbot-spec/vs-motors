@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { Listing } from '../types'
+import type { Listing } from '../types'
 import './CarCard.css'
 
 const TRANSMISSION_LABELS: Record<string, string> = {
