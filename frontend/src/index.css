@@ -1,4 +1,3 @@
-/* Цвета берём из темы Telegram, с fallback для браузера */
 :root {
   --tg-bg: var(--tg-theme-bg-color, #ffffff);
   --tg-text: var(--tg-theme-text-color, #000000);
@@ -16,32 +15,15 @@
   -webkit-font-smoothing: antialiased;
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+*, *::before, *::after { box-sizing: border-box; }
 
-body {
-  margin: 0;
-  background: var(--tg-bg);
-}
+body { margin: 0; background: var(--tg-bg); }
 
-#root {
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-}
+#root { min-height: 100svh; display: flex; flex-direction: column; }
 
-h1, h2, h3 {
-  margin: 0;
-  font-weight: 600;
-  color: var(--tg-text);
-}
+h1, h2, h3 { margin: 0; font-weight: 600; color: var(--tg-text); }
 
-p {
-  margin: 0;
-}
+p { margin: 0; }
 
 button {
   cursor: pointer;
@@ -55,11 +37,6 @@ button {
   transition: opacity 0.15s;
 }
 
-button:active {
-  opacity: 0.8;
-}
+button:active { opacity: 0.8; }
 
-a {
-  color: var(--tg-link);
-  text-decoration: none;
-}
+a { color: var(--tg-link); text-decoration: none; }

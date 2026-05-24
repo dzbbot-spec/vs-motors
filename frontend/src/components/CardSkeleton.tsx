@@ -2,12 +2,12 @@ import './CardSkeleton.css'
 
 export default function CardSkeleton() {
   return (
-    <div className="skeleton-card">
-      <div className="skeleton skeleton--photo" />
-      <div className="skeleton-card__body">
-        <div className="skeleton skeleton--title" />
-        <div className="skeleton skeleton--price" />
-        <div className="skeleton skeleton--meta" />
+    <div className="skeleton">
+      <div className="skeleton__photo" />
+      <div className="skeleton__body">
+        <div className="skeleton__line skeleton__line--title" />
+        <div className="skeleton__line skeleton__line--price" />
+        <div className="skeleton__line skeleton__line--meta" />
       </div>
     </div>
   )

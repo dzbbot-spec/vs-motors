@@ -4,22 +4,12 @@ import { api } from '../api/client'
 import { useTelegram } from '../hooks/useTelegram'
 import { useBackButton } from '../hooks/useBackButton'
 import type { ListingFull } from '../types'
-import PhotoGallery from '../components/PhotoGallery'
 import './ListingDetailPage.css'
 
-const TRANSMISSION_LABELS: Record<string, string> = {
-  AUTO: 'Автомат', MANUAL: 'Механика', CVT: 'Вариатор', ROBOT: 'Робот',
-}
-const FUEL_LABELS: Record<string, string> = {
-  PETROL: 'Бензин', DIESEL: 'Дизель', HYBRID: 'Гибрид', ELECTRIC: 'Электро', GAS: 'Газ',
-}
-const BODY_LABELS: Record<string, string> = {
-  SEDAN: 'Седан', HATCHBACK: 'Хэтчбек', SUV: 'Внедорожник', MINIVAN: 'Минивэн',
-  COUPE: 'Купе', WAGON: 'Универсал', CONVERTIBLE: 'Кабриолет', PICKUP: 'Пикап',
-}
-const DRIVE_LABELS: Record<string, string> = {
-  FWD: 'Передний', RWD: 'Задний', AWD: 'Полный',
-}
+const TX: Record<string, string> = { AUTO: 'Автомат', MANUAL: 'Механика', CVT: 'Вариатор', ROBOT: 'Робот' }
+const FL: Record<string, string> = { PETROL: 'Бензин', DIESEL: 'Дизель', HYBRID: 'Гибрид', ELECTRIC: 'Электро', GAS: 'Газ' }
+const BD: Record<string, string> = { SEDAN: 'Седан', HATCHBACK: 'Хэтчбек', SUV: 'Внедорожник', MINIVAN: 'Минивэн', COUPE: 'Купе', WAGON: 'Универсал', CONVERTIBLE: 'Кабриолет', PICKUP: 'Пикап' }
+const DR: Record<string, string> = { FWD: 'Передний', RWD: 'Задний', AWD: 'Полный' }
 
 export default function ListingDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -27,8 +17,8 @@ export default function ListingDetailPage() {
   const { isOwner } = useTelegram()
   const [listing, setListing] = useState<ListingFull | null>(null)
   const [loading, setLoading] = useState(true)
+  const [photo, setPhoto] = useState(0)
   const [toast, setToast] = useState(false)
-  const [deleting, setDeleting] = useState(false)
   useBackButton()
 
   useEffect(() => {
@@ -47,7 +37,6 @@ export default function ListingDetailPage() {
 
   const handleDelete = async () => {
     if (!window.confirm('Удалить объявление?')) return
-    setDeleting(true)
     await api.delete(`/api/listings/${id}`)
     navigate('/')
   }
@@ -56,27 +45,36 @@ export default function ListingDetailPage() {
   if (!listing) return null
 
   const sold = listing.status === 'sold'
-  const ownerTg = import.meta.env.VITE_OWNER_TG_USERNAME
-  const ownerWa = import.meta.env.VITE_OWNER_WHATSAPP
-  const ownerPhone = import.meta.env.VITE_OWNER_PHONE
+  const photos = listing.photos
 
   const specs: [string, string | null | undefined][] = [
     ['Пробег', listing.mileage != null ? `${listing.mileage.toLocaleString()} км` : null],
-    ['Год выпуска', String(listing.year)],
-    ['КПП', listing.transmission ? (TRANSMISSION_LABELS[listing.transmission] ?? listing.transmission) : null],
-    ['Топливо', listing.fuel_type ? (FUEL_LABELS[listing.fuel_type] ?? listing.fuel_type) : null],
-    ['Кузов', listing.body_type ? (BODY_LABELS[listing.body_type] ?? listing.body_type) : null],
+    ['Год', String(listing.year)],
+    ['КПП', listing.transmission ? (TX[listing.transmission] ?? listing.transmission) : null],
+    ['Топливо', listing.fuel_type ? (FL[listing.fuel_type] ?? listing.fuel_type) : null],
+    ['Кузов', listing.body_type ? (BD[listing.body_type] ?? listing.body_type) : null],
     ['Цвет', listing.color],
-    ['Объём двигателя', listing.engine_volume != null ? `${listing.engine_volume} л` : null],
+    ['Объём', listing.engine_volume != null ? `${listing.engine_volume} л` : null],
     ['Мощность', listing.power_hp != null ? `${listing.power_hp} л.с.` : null],
-    ['Привод', listing.drive_type ? (DRIVE_LABELS[listing.drive_type] ?? listing.drive_type) : null],
+    ['Привод', listing.drive_type ? (DR[listing.drive_type] ?? listing.drive_type) : null],
     ['VIN', listing.vin],
-    ['Страна сборки', listing.country],
+    ['Страна', listing.country],
   ]
 
   return (
     <div className="detail">
-      <PhotoGallery photos={listing.photos} alt={`${listing.brand} ${listing.model}`} />
+      {photos.length > 0 && (
+        <div className="detail__gallery">
+          <img src={photos[photo]} alt="" className="detail__gallery-img" />
+          {photos.length > 1 && (
+            <div className="detail__dots">
+              {photos.map((_, i) => (
+                <span key={i} className={`detail__dot${i === photo ? ' detail__dot--active' : ''}`} onClick={() => setPhoto(i)} />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="detail__content">
         <div className="detail__header">
@@ -86,9 +84,7 @@ export default function ListingDetailPage() {
           </span>
         </div>
 
-        <p className="detail__price">
-          {listing.price.toLocaleString()} {listing.currency}
-        </p>
+        <p className="detail__price">{listing.price.toLocaleString()} {listing.currency}</p>
 
         <table className="detail__specs">
           <tbody>
@@ -101,40 +97,32 @@ export default function ListingDetailPage() {
           </tbody>
         </table>
 
-        {listing.description && (
-          <p className="detail__description">{listing.description}</p>
-        )}
+        {listing.description && <p className="detail__description">{listing.description}</p>}
 
         <div className="detail__contacts">
-          {ownerTg && (
-            <a className="detail__btn detail__btn--tg" href={`tg://resolve?domain=${ownerTg}`}>
+          {import.meta.env.VITE_OWNER_TG_USERNAME && (
+            <a className="detail__btn detail__btn--tg" href={`tg://resolve?domain=${import.meta.env.VITE_OWNER_TG_USERNAME}`}>
               Написать в Telegram
             </a>
           )}
-          {ownerWa && (
-            <a className="detail__btn detail__btn--wa" href={`https://wa.me/${ownerWa}`} target="_blank" rel="noreferrer">
-              Написать в WhatsApp
+          {import.meta.env.VITE_OWNER_WHATSAPP && (
+            <a className="detail__btn detail__btn--wa" href={`https://wa.me/${import.meta.env.VITE_OWNER_WHATSAPP}`} target="_blank" rel="noreferrer">
+              WhatsApp
             </a>
           )}
-          {ownerPhone && (
-            <a className="detail__btn detail__btn--phone" href={`tel:${ownerPhone}`}>
+          {import.meta.env.VITE_OWNER_PHONE && (
+            <a className="detail__btn detail__btn--phone" href={`tel:${import.meta.env.VITE_OWNER_PHONE}`}>
               Позвонить
             </a>
           )}
         </div>
 
-        <button className="detail__share" onClick={handleShare}>
-          Поделиться
-        </button>
+        <button className="detail__share" onClick={handleShare}>Поделиться</button>
 
         {isOwner && (
-          <div className="detail__owner-actions">
-            <button onClick={() => navigate(`/listing/${id}/edit`)}>
-              Редактировать
-            </button>
-            <button className="detail__delete-btn" onClick={handleDelete} disabled={deleting}>
-              {deleting ? 'Удаление...' : 'Удалить'}
-            </button>
+          <div className="detail__owner">
+            <button onClick={() => navigate(`/listing/${id}/edit`)}>Редактировать</button>
+            <button className="detail__delete" onClick={handleDelete}>Удалить</button>
           </div>
         )}
       </div>

@@ -5,7 +5,6 @@ import { showBackButton, hideBackButton } from '../lib/telegram'
 export function useBackButton() {
   const navigate = useNavigate()
   const goBack = useCallback(() => navigate(-1), [navigate])
-
   useEffect(() => {
     showBackButton(goBack)
     return () => hideBackButton(goBack)

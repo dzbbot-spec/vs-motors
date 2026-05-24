@@ -1,12 +1,10 @@
 export interface FormData {
-  // Шаг 1
   brand: string
   model: string
   year: string
   price: string
   currency: 'USD' | 'ILS'
   status: 'active' | 'sold'
-  // Шаг 2
   mileage: string
   transmission: string
   fuel_type: string
@@ -17,10 +15,9 @@ export interface FormData {
   drive_type: string
   vin: string
   country: string
-  // Шаг 3
   description: string
-  existingPhotos: string[]   // уже загруженные URL (при редактировании)
-  newPhotoFiles: File[]      // новые файлы для загрузки
+  existingPhotos: string[]
+  newPhotoFiles: File[]
 }
 
 export const EMPTY_FORM: FormData = {

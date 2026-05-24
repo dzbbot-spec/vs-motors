@@ -12,15 +12,14 @@ export default function HomePage() {
   const navigate = useNavigate()
   const sentinelRef = useRef<HTMLDivElement>(null)
 
-  // Бесконечная прокрутка через IntersectionObserver
   useEffect(() => {
-    const sentinel = sentinelRef.current
-    if (!sentinel) return
+    const el = sentinelRef.current
+    if (!el) return
     const observer = new IntersectionObserver(
       ([entry]) => { if (entry.isIntersecting) loadMore() },
       { rootMargin: '200px' }
     )
-    observer.observe(sentinel)
+    observer.observe(el)
     return () => observer.disconnect()
   }, [loadMore])
 
@@ -42,14 +41,10 @@ export default function HomePage() {
           {Array.from({ length: 6 }).map((_, i) => <CardSkeleton key={i} />)}
         </div>
       ) : items.length === 0 ? (
-        <div className="home__empty">
-          <p>Объявлений пока нет</p>
-        </div>
+        <div className="home__empty"><p>Объявлений пока нет</p></div>
       ) : (
         <div className="home__grid">
-          {items.map(listing => (
-            <CarCard key={listing.id} listing={listing} />
-          ))}
+          {items.map(l => <CarCard key={l.id} listing={l} />)}
         </div>
       )}
 

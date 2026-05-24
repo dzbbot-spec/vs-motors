@@ -1,5 +1,5 @@
+import asyncio
 from contextlib import asynccontextmanager
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -12,17 +12,12 @@ from routers.owner import router as owner_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Старт: поднимаем БД и бота
     database.pool = await database.create_pool()
     await bot.delete_webhook(drop_pending_updates=True)
     await setup_bot_commands()
-    # Бот работает через polling в фоне
-    import asyncio
     polling_task = asyncio.create_task(dp.start_polling(bot))
     yield
-    # Стоп: корректное завершение
     polling_task.cancel()
-    await dp.stop_polling()
     await bot.session.close()
     await database.pool.close()
 
@@ -43,5 +38,4 @@ app.include_router(owner_router)
 
 @app.get("/health")
 async def health():
-    db_ok = await database.check_db()
-    return {"status": "ok", "db": "ok" if db_ok else "error"}
+    return {"status": "ok", "db": "ok" if await database.check_db() else "error"}

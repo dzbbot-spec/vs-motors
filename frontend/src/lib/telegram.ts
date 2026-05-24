@@ -28,6 +28,7 @@ export const getStartParam = (): string | undefined => tg()?.initDataUnsafe?.sta
 export function showBackButton(fn: () => void) {
   try { tg()?.BackButton.show(); tg()?.BackButton.onClick(fn) } catch { /* ignore */ }
 }
+
 export function hideBackButton(fn: () => void) {
   try { tg()?.BackButton.hide(); tg()?.BackButton.offClick(fn) } catch { /* ignore */ }
 }
