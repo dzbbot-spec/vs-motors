@@ -8,7 +8,7 @@ import './HomePage.css'
 
 export default function HomePage() {
   const { items, loading, initialLoading, error, loadMore } = useListings()
-  const { isOwner, user } = useTelegram()
+  const { isOwner } = useTelegram()
   const navigate = useNavigate()
   const sentinelRef = useRef<HTMLDivElement>(null)
 
@@ -37,10 +37,8 @@ export default function HomePage() {
 
       {/* DEBUG — убрать после диагностики */}
       <div style={{ fontSize: 11, padding: '4px 12px', color: '#888', wordBreak: 'break-all' }}>
-        {'hasTg: ' + String(!!(window as unknown as {Telegram?: {WebApp?: unknown}}).Telegram?.WebApp)}
-        {' | user: ' + (user ? `id=${user.id}` : 'null')}
-        {' | OWNER: ' + (import.meta.env.VITE_OWNER_TG_ID ?? 'undef')}
-        {' | isOwner: ' + String(isOwner)}
+        {'initDataUnsafe: ' + JSON.stringify((window as unknown as {Telegram?: {WebApp?: {initDataUnsafe?: unknown}}}).Telegram?.WebApp?.initDataUnsafe)}
+        {' | initData empty: ' + String(!(window as unknown as {Telegram?: {WebApp?: {initData?: string}}}).Telegram?.WebApp?.initData)}
       </div>
 
       {error && <p className="home__error">{error}</p>}
