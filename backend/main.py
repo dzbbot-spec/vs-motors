@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 import database
-from bot import bot, dp
+from bot import bot, dp, setup_bot_commands
 from config import settings
 from routers.public import router as public_router
 from routers.owner import router as owner_router
@@ -15,6 +15,7 @@ async def lifespan(app: FastAPI):
     # Старт: поднимаем БД и бота
     database.pool = await database.create_pool()
     await bot.delete_webhook(drop_pending_updates=True)
+    await setup_bot_commands()
     # Бот работает через polling в фоне
     import asyncio
     polling_task = asyncio.create_task(dp.start_polling(bot))
