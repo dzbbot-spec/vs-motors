@@ -8,7 +8,7 @@ import './HomePage.css'
 
 export default function HomePage() {
   const { items, loading, initialLoading, error, loadMore } = useListings()
-  const { isOwner } = useTelegram()
+  const { isOwner, user } = useTelegram()
   const navigate = useNavigate()
   const sentinelRef = useRef<HTMLDivElement>(null)
 
@@ -34,6 +34,11 @@ export default function HomePage() {
           </button>
         )}
       </header>
+
+      {/* DEBUG — убрать после диагностики */}
+      <div style={{ fontSize: 11, padding: '4px 12px', color: '#888', wordBreak: 'break-all' }}>
+        TG user: {user ? `id=${user.id}` : 'null'} | OWNER_ID: {import.meta.env.VITE_OWNER_TG_ID ?? 'undefined'} | isOwner: {String(isOwner)}
+      </div>
 
       {error && <p className="home__error">{error}</p>}
 
