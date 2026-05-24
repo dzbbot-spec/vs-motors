@@ -6,6 +6,7 @@ import ListingDetailPage from './pages/ListingDetailPage'
 import AddListingPage from './pages/AddListingPage'
 import EditListingPage from './pages/EditListingPage'
 import AdminPage from './pages/AdminPage'
+import OwnerGuard from './components/OwnerGuard'
 
 export default function App() {
   useEffect(() => {
@@ -17,9 +18,9 @@ export default function App() {
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/listing/:id" element={<ListingDetailPage />} />
-      <Route path="/add" element={<AddListingPage />} />
-      <Route path="/listing/:id/edit" element={<EditListingPage />} />
-      <Route path="/admin" element={<AdminPage />} />
+      <Route path="/add" element={<OwnerGuard><AddListingPage /></OwnerGuard>} />
+      <Route path="/listing/:id/edit" element={<OwnerGuard><EditListingPage /></OwnerGuard>} />
+      <Route path="/admin" element={<OwnerGuard><AdminPage /></OwnerGuard>} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )
