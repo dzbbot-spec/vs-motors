@@ -1,3 +1,5 @@
+import ListingForm from '../components/ListingForm'
+
 export default function AddListingPage() {
-  return <div>Добавить объявление (этап 9)</div>
+  return <ListingForm />
 }
