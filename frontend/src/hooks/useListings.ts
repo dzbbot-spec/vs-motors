@@ -14,9 +14,7 @@ export function useListings() {
     setLoading(true)
     setError(null)
     try {
-      const data = await api.get<ListingsPage>(
-        `/api/listings?page=${pageNum}&page_size=20`
-      )
+      const data = await api.get<ListingsPage>(`/api/listings?page=${pageNum}&page_size=20`)
       setItems(prev => pageNum === 1 ? data.items : [...prev, ...data.items])
       setHasNext(data.has_next)
       setPage(pageNum)

@@ -1,4 +1,4 @@
-interface TelegramWebApp {
+interface TgWebApp {
   ready(): void
   expand(): void
   initData: string
@@ -12,45 +12,22 @@ interface TelegramWebApp {
     onClick(fn: () => void): void
     offClick(fn: () => void): void
   }
-  colorScheme?: 'light' | 'dark'
 }
 
-// Ленивый доступ — не кешируем на уровне модуля, берём каждый раз
-function getTg(): TelegramWebApp | undefined {
+function tg(): TgWebApp | undefined {
   if (typeof window === 'undefined') return undefined
-  return (window as unknown as { Telegram?: { WebApp?: TelegramWebApp } }).Telegram?.WebApp
+  return (window as unknown as { Telegram?: { WebApp?: TgWebApp } }).Telegram?.WebApp
 }
 
-export function ready() {
-  try { getTg()?.ready() } catch { /* ignore */ }
-}
-
-export function expand() {
-  try { getTg()?.expand() } catch { /* ignore */ }
-}
-
-export function getInitData(): string {
-  return getTg()?.initData ?? ''
-}
-
-export function getUser() {
-  return getTg()?.initDataUnsafe?.user ?? null
-}
-
-export function getStartParam(): string | undefined {
-  return getTg()?.initDataUnsafe?.start_param
-}
+export const ready = () => { try { tg()?.ready() } catch { /* ignore */ } }
+export const expand = () => { try { tg()?.expand() } catch { /* ignore */ } }
+export const getInitData = (): string => tg()?.initData ?? ''
+export const getUser = () => tg()?.initDataUnsafe?.user ?? null
+export const getStartParam = (): string | undefined => tg()?.initDataUnsafe?.start_param
 
 export function showBackButton(fn: () => void) {
-  try {
-    getTg()?.BackButton.show()
-    getTg()?.BackButton.onClick(fn)
-  } catch { /* ignore */ }
+  try { tg()?.BackButton.show(); tg()?.BackButton.onClick(fn) } catch { /* ignore */ }
 }
-
 export function hideBackButton(fn: () => void) {
-  try {
-    getTg()?.BackButton.hide()
-    getTg()?.BackButton.offClick(fn)
-  } catch { /* ignore */ }
+  try { tg()?.BackButton.hide(); tg()?.BackButton.offClick(fn) } catch { /* ignore */ }
 }

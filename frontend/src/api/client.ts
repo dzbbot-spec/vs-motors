@@ -1,4 +1,4 @@
-import WebApp from '@twa-dev/sdk'
+import { getInitData } from '../lib/telegram'
 
 const BASE_URL = import.meta.env.VITE_API_URL ?? ''
 
@@ -8,16 +8,18 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     ...(options.headers as Record<string, string>),
   }
 
-  // Добавляем initData для owner-эндпоинтов
-  if (WebApp.initData) {
-    headers['X-Telegram-Init-Data'] = WebApp.initData
-  }
+  const initData = getInitData()
+  if (initData) headers['X-Telegram-Init-Data'] = initData
 
   const res = await fetch(`${BASE_URL}${path}`, { ...options, headers })
 
   if (!res.ok) {
-    const err = await res.json().catch(() => ({ detail: res.statusText }))
-    throw new Error(err.detail ?? 'Ошибка запроса')
+    let detail = res.statusText
+    try {
+      const body = await res.json()
+      if (typeof body.detail === 'string') detail = body.detail
+    } catch { /* ignore */ }
+    throw new Error(detail)
   }
 
   if (res.status === 204) return undefined as T
@@ -30,9 +32,6 @@ export const api = {
     request<T>(path, { method: 'POST', body: JSON.stringify(body) }),
   patch: <T>(path: string, body: unknown) =>
     request<T>(path, { method: 'PATCH', body: JSON.stringify(body) }),
-  delete: <T>(path: string, body?: unknown) =>
-    request<T>(path, {
-      method: 'DELETE',
-      ...(body ? { body: JSON.stringify(body) } : {}),
-    }),
+  delete: <T>(path: string) =>
+    request<T>(path, { method: 'DELETE' }),
 }
