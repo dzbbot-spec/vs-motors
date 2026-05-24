@@ -151,6 +151,8 @@ export default function ListingForm({ initial }: Props) {
         ))}
       </div>
 
+      {error && <p className="lform__error" style={{ margin: '0 16px' }}>{error}</p>}
+
       <div className="lform__body">
         {step === 0 && <Step1Basic data={data} onChange={patch} />}
         {step === 1 && <Step2Specs data={data} onChange={patch} />}
@@ -165,7 +167,6 @@ export default function ListingForm({ initial }: Props) {
             <p className="lform__preview-photos">
               Фото: {data.existingPhotos.length + data.newPhotoFiles.length} шт.
             </p>
-            {error && <p className="lform__error">{error}</p>}
           </div>
         )}
       </div>

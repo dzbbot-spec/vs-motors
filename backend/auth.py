@@ -13,6 +13,9 @@ def verify_init_data(init_data: str) -> dict:
     if not received_hash:
         raise HTTPException(status_code=401, detail="Отсутствует hash в initData")
 
+    # signature добавлен в Bot API 7.3 и НЕ включается в data_check_string для hash
+    parsed.pop("signature", None)
+
     # Строка для проверки: поля в алфавитном порядке, разделённые \n
     data_check_string = "\n".join(
         f"{k}={v}" for k, v in sorted(parsed.items())
