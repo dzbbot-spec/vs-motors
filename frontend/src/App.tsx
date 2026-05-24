@@ -24,8 +24,12 @@ function DeepLinkHandler() {
 
 export default function App() {
   useEffect(() => {
-    WebApp.ready()
-    WebApp.expand()
+    try {
+      WebApp.ready()
+      WebApp.expand()
+    } catch {
+      // Вне Telegram — игнорируем
+    }
   }, [])
 
   return (

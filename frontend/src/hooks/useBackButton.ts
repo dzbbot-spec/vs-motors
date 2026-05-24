@@ -1,15 +1,25 @@
-import { useEffect } from 'react'
+import { useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import WebApp from '@twa-dev/sdk'
 
 export function useBackButton() {
   const navigate = useNavigate()
+  const goBack = useCallback(() => navigate(-1), [navigate])
+
   useEffect(() => {
-    WebApp.BackButton.show()
-    WebApp.BackButton.onClick(() => navigate(-1))
-    return () => {
-      WebApp.BackButton.hide()
-      WebApp.BackButton.offClick(() => navigate(-1))
+    try {
+      WebApp.BackButton.show()
+      WebApp.BackButton.onClick(goBack)
+    } catch {
+      // BackButton недоступен в этой версии Telegram
     }
-  }, [navigate])
+    return () => {
+      try {
+        WebApp.BackButton.hide()
+        WebApp.BackButton.offClick(goBack)
+      } catch {
+        // ignore
+      }
+    }
+  }, [goBack])
 }
