@@ -86,7 +86,7 @@ vs-motors/
 
 Полный список с обоснованием — в `DECISIONS.md`. Краткая выжимка:
 
-1. **asyncpg**: всегда `prepared_statement_cache_size=0` — Supabase Pooler иначе падает
+1. **asyncpg**: всегда `statement_cache_size=0` — Supabase Pooler иначе падает (параметр именно так называется, не `prepared_statement_cache_size`)
 2. **Авторизация**: владелец = `telegram_id == OWNER_TELEGRAM_ID` из ENV. Обычные пользователи не авторизуются вообще
 3. **Фото**: библиотека `filetype==1.2.0` для валидации (не `python-magic` — нет libmagic на Render)
 4. **Шаринг**: `navigator.clipboard.writeText(url)` — URL строить синхронно, без await перед writeText

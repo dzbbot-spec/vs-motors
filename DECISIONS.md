@@ -32,10 +32,10 @@
 
 ---
 
-### asyncpg prepared_statement_cache_size=0
+### asyncpg statement_cache_size=0
 **Решение:** Принудительно отключаем кэш prepared statements в asyncpg.
 **Почему:** Supabase Session Pooler не поддерживает prepared statements — возникают случайные ошибки в продакшне при использовании pooler-строки подключения.
-**Правило:** Всегда указывать `prepared_statement_cache_size=0` при подключении к Supabase через pooler.
+**Правило:** Всегда указывать `statement_cache_size=0` при подключении к Supabase через pooler. Параметр называется именно `statement_cache_size` (не `prepared_statement_cache_size`).
 
 ---
 

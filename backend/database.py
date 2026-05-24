@@ -8,7 +8,7 @@ async def create_pool() -> asyncpg.Pool:
     # prepared_statement_cache_size=0 обязательно для Supabase Pooler
     return await asyncpg.create_pool(
         settings.DATABASE_URL,
-        prepared_statement_cache_size=0,
+        statement_cache_size=0,
         min_size=1,
         max_size=5,
     )
