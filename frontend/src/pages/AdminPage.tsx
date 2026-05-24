@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../api/client'
 import { Listing } from '../types'
+import { useBackButton } from '../hooks/useBackButton'
 import './AdminPage.css'
 
 export default function AdminPage() {
   const navigate = useNavigate()
+  useBackButton()
   const [items, setItems] = useState<Listing[]>([])
   const [loading, setLoading] = useState(true)
   const [toggling, setToggling] = useState<string | null>(null)

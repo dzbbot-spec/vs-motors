@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { api } from '../../api/client'
 import { ListingFull } from '../../types'
 import { FormData, EMPTY_FORM } from './types'
+import { useBackButton } from '../../hooks/useBackButton'
 import Step1Basic from './Step1Basic'
 import Step2Specs from './Step2Specs'
 import Step3Photos from './Step3Photos'
@@ -16,6 +17,7 @@ const STEP_TITLES = ['Основное', 'Характеристики', 'Фот
 
 export default function ListingForm({ initial }: Props) {
   const navigate = useNavigate()
+  useBackButton()
   const [step, setStep] = useState(0)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
