@@ -5,7 +5,7 @@ import type { Listing, ListingsPage } from '../types'
 export function useListings() {
   const [items, setItems] = useState<Listing[]>([])
   const [page, setPage] = useState(1)
-  const [hasNext, setHasNext] = useState(true)
+  const [hasNext, setHasNext] = useState(false)
   const [loading, setLoading] = useState(false)
   const [initialLoading, setInitialLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -31,8 +31,8 @@ export function useListings() {
   useEffect(() => { loadPage(1) }, [loadPage])
 
   const loadMore = useCallback(() => {
-    if (!loading && hasNext) loadPage(page + 1)
-  }, [loading, hasNext, page, loadPage])
+    if (!loading && !initialLoading && hasNext) loadPage(page + 1)
+  }, [loading, initialLoading, hasNext, page, loadPage])
 
   return { items, loading, initialLoading, hasNext, error, loadMore }
 }
