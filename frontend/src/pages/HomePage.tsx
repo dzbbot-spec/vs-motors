@@ -37,7 +37,10 @@ export default function HomePage() {
 
       {/* DEBUG — убрать после диагностики */}
       <div style={{ fontSize: 11, padding: '4px 12px', color: '#888', wordBreak: 'break-all' }}>
-        TG user: {user ? `id=${user.id}` : 'null'} | OWNER_ID: {import.meta.env.VITE_OWNER_TG_ID ?? 'undefined'} | isOwner: {String(isOwner)}
+        {'hasTg: ' + String(!!(window as unknown as {Telegram?: {WebApp?: unknown}}).Telegram?.WebApp)}
+        {' | user: ' + (user ? `id=${user.id}` : 'null')}
+        {' | OWNER: ' + (import.meta.env.VITE_OWNER_TG_ID ?? 'undef')}
+        {' | isOwner: ' + String(isOwner)}
       </div>
 
       {error && <p className="home__error">{error}</p>}
