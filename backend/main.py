@@ -7,6 +7,7 @@ import database
 from bot import bot, dp
 from config import settings
 from routers.public import router as public_router
+from routers.owner import router as owner_router
 
 
 @asynccontextmanager
@@ -36,6 +37,7 @@ app.add_middleware(
 )
 
 app.include_router(public_router)
+app.include_router(owner_router)
 
 
 @app.get("/health")
