@@ -1,0 +1,200 @@
+/* ── Страница ── */
+.detail-page {
+  min-height: 100vh;
+  background: var(--bg-secondary, #f5f5f5);
+  padding-bottom: 32px;
+}
+
+/* ── Галерея ── */
+.detail-gallery {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #e0e0e0;
+  overflow: hidden;
+}
+.detail-gallery__track {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.detail-gallery__track::-webkit-scrollbar { display: none; }
+.detail-gallery__slide {
+  flex-shrink: 0;
+  width: 100%;
+  height: 100%;
+  scroll-snap-align: start;
+}
+.detail-gallery__slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.detail-gallery__dots {
+  position: absolute;
+  bottom: 10px;
+  left: 0; right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+.detail-gallery__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.5);
+  transition: background 0.2s;
+}
+.detail-gallery__dot--active {
+  background: #fff;
+  width: 18px;
+  border-radius: 3px;
+}
+.detail-gallery__no-photo {
+  width: 100%;
+  height: 100%;
+  background: #e8e8e8;
+}
+
+/* ── Белая карточка с основной инфой ── */
+.detail-card {
+  margin: 12px 12px 0;
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+}
+
+.detail-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text, #000);
+  line-height: 1.25;
+  margin-bottom: 6px;
+}
+
+.detail-price {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--text, #000);
+  letter-spacing: -0.5px;
+  margin-bottom: 10px;
+}
+
+.detail-status {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+}
+.detail-status--active {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+.detail-status--sold {
+  background: #f0f0f0;
+  color: #888;
+}
+
+/* ── Кнопки контактов ── */
+.detail-contacts {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 12px 12px 0;
+}
+
+.detail-contact-btn {
+  width: 100%;
+  padding: 15px 16px;
+  border-radius: 50px;
+  background: #fff;
+  border: none;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.10), 0 0 0 1px rgba(0,0,0,0.06);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text, #000);
+  text-align: center;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 0.15s ease;
+}
+.detail-contact-btn:active { opacity: 0.6; }
+
+/* ── Характеристики ── */
+.detail-section-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  padding: 16px 12px 8px;
+}
+
+.detail-specs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 0 12px;
+}
+
+.detail-spec-block {
+  background: #fff;
+  border-radius: 14px;
+  padding: 14px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+}
+
+.detail-spec-label {
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 4px;
+}
+
+.detail-spec-value {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text, #000);
+}
+
+/* ── Описание ── */
+.detail-desc-card {
+  margin: 8px 12px 0;
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text, #000);
+}
+
+/* ── Кнопки владельца ── */
+.detail-owner-actions {
+  display: flex;
+  gap: 8px;
+  margin: 12px 12px 0;
+}
+
+.detail-owner-btn {
+  flex: 1;
+  padding: 14px 8px;
+  border-radius: 50px;
+  background: #fff;
+  border: none;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.10), 0 0 0 1px rgba(0,0,0,0.06);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text, #000);
+  cursor: pointer;
+  font-family: inherit;
+  text-align: center;
+  transition: opacity 0.15s ease;
+}
+.detail-owner-btn:active { opacity: 0.6; }
+.detail-owner-btn--danger { color: #ff3b30; }
