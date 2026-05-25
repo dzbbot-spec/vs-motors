@@ -258,6 +258,7 @@ export default function ListingDetailPage() {
         </div>
       )}
 
+      <div style={{ height: '80px' }} />
       <BottomNav />
     </div>
   )
