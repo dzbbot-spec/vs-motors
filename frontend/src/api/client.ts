@@ -11,8 +11,12 @@ async function request<T>(path: string, options: RequestInit = {}, attempt = 0):
   const initData = getInitData()
   if (initData) headers['X-Telegram-Init-Data'] = initData
 
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), 15000)
+
   try {
-    const res = await fetch(`${BASE_URL}${path}`, { ...options, headers })
+    const res = await fetch(`${BASE_URL}${path}`, { ...options, headers, signal: controller.signal })
+    clearTimeout(timer)
 
     if (!res.ok) {
       let detail = res.statusText
@@ -26,11 +30,14 @@ async function request<T>(path: string, options: RequestInit = {}, attempt = 0):
     if (res.status === 204) return undefined as T
     return res.json()
   } catch (e) {
+    clearTimeout(timer)
     if (e instanceof TypeError && attempt < 2) {
       await new Promise(r => setTimeout(r, 2000 * (attempt + 1)))
       return request<T>(path, options, attempt + 1)
     }
-    throw e
+    throw new Error(
+      e instanceof Error ? (e.message || 'Сетевая ошибка') : 'Сетевая ошибка'
+    )
   }
 }
 
