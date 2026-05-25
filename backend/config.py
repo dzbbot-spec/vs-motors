@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     MINI_APP_URL: str = ""
     CORS_ORIGINS: str = ""
     WEBHOOK_URL: str = ""
+    DEBUG_SKIP_AUTH: bool = False
 
     @property
     def cors_origins_list(self) -> list[str]:

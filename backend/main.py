@@ -89,4 +89,6 @@ async def health():
         "db_detail": db_err,
         "pool": database.pool is not None,
         "webhook": bool(settings.WEBHOOK_URL),
+        "debug_skip_auth": settings.DEBUG_SKIP_AUTH,
+        "bot_token_prefix": settings.BOT_TOKEN[:10],
     }
