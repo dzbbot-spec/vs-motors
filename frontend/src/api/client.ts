@@ -12,7 +12,7 @@ async function request<T>(path: string, options: RequestInit = {}, attempt = 0):
   if (initData) headers['X-Telegram-Init-Data'] = initData
 
   const controller = new AbortController()
-  const timer = setTimeout(() => controller.abort(), 15000)
+  const timer = setTimeout(() => controller.abort(), 50000)
 
   try {
     const res = await fetch(`${BASE_URL}${path}`, { ...options, headers, signal: controller.signal })

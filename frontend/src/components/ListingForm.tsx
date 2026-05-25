@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { api } from '../api/client'
 
 export interface ListingFormData {
@@ -66,6 +66,13 @@ export default function ListingForm({
   const [errors, setErrors] = useState<Partial<Record<keyof ListingFormData, string>>>({})
   const [tapCount, setTapCount] = useState(0)
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  // Прогрев бэкенда при переходе на последний шаг
+  useEffect(() => {
+    if (step === 3) {
+      fetch('/health').catch(() => { /* silent */ })
+    }
+  }, [step])
 
   const set = (field: keyof ListingFormData) => (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>

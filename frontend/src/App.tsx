@@ -35,6 +35,8 @@ export default function App() {
   useEffect(() => {
     ready()
     expand()
+    // Прогрев бэкенда при запуске приложения
+    fetch('/health').catch(() => { /* silent */ })
   }, [])
 
   return (
