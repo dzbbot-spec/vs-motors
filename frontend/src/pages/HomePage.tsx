@@ -79,6 +79,16 @@ export default function HomePage() {
         </button>
       </div>
 
+      {/* Кнопка связи — под шапкой, до списка */}
+      <div className="home-contact-bar">
+        <button
+          className="btn-contact"
+          onClick={() => window.open(`tg://resolve?domain=${import.meta.env.VITE_OWNER_TG_USERNAME}`)}
+        >
+          Связаться с нами
+        </button>
+      </div>
+
       {error && <div className="error-msg">{error}</div>}
 
       {initialLoading ? (

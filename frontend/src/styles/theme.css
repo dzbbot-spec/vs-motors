@@ -6,6 +6,7 @@
   --button: var(--tg-theme-button-color, #000000);
   --button-text: var(--tg-theme-button-text-color, #ffffff);
   --divider: rgba(0, 0, 0, 0.08);
+  --border: rgba(0, 0, 0, 0.12);
   --radius: 12px;
   --radius-sm: 8px;
   --danger: #ff3b30;

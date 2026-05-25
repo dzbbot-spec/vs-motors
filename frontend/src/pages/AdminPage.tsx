@@ -98,19 +98,22 @@ export default function AdminPage() {
 
               <div className="admin-row__actions">
                 <button
-                  className="admin-row__btn"
+                  className="btn btn-ghost btn-sm"
+                  style={{ width: 'auto' }}
                   onClick={() => nav(`/listing/${item.id}/edit`)}
                 >
                   Изменить
                 </button>
                 <button
-                  className="admin-row__btn"
+                  className="btn btn-ghost btn-sm"
+                  style={{ width: 'auto' }}
                   onClick={() => handleToggle(item)}
                 >
                   {item.status === 'active' ? 'Продано' : 'В продаже'}
                 </button>
                 <button
-                  className="admin-row__btn admin-row__btn--danger"
+                  className="btn btn-ghost btn-sm"
+                  style={{ width: 'auto', color: 'var(--danger)' }}
                   onClick={() => handleDelete(item.id)}
                 >
                   Удалить

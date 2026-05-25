@@ -133,7 +133,14 @@ export default function ListingDetailPage() {
           {listing.status === 'sold' && <span className="status-badge">Продано</span>}
           {listing.status === 'active' && <span className="status-badge status-badge--active">В продаже</span>}
         </div>
-        <button className="share-btn" onClick={handleShare} aria-label="Поделиться">↗</button>
+        <button
+          className="btn btn-ghost btn-sm"
+          onClick={handleShare}
+          aria-label="Поделиться"
+          style={{ position: 'absolute', top: 12, right: 12, width: 'auto' }}
+        >
+          ↗
+        </button>
       </div>
 
       {/* Contact buttons */}
@@ -142,7 +149,7 @@ export default function ListingDetailPage() {
           href={`https://t.me/${OWNER_TG}`}
           target="_blank"
           rel="noreferrer"
-          className="contact-btn contact-btn--tg"
+          className="btn btn-outline"
         >
           Написать в Telegram
         </a>
@@ -151,7 +158,7 @@ export default function ListingDetailPage() {
             href={`https://wa.me/${OWNER_WA}`}
             target="_blank"
             rel="noreferrer"
-            className="contact-btn contact-btn--wa"
+            className="btn btn-outline"
           >
             WhatsApp
           </a>
@@ -159,7 +166,7 @@ export default function ListingDetailPage() {
         {OWNER_PHONE && (
           <a
             href={`tel:${OWNER_PHONE}`}
-            className="contact-btn contact-btn--phone"
+            className="btn btn-outline"
           >
             {OWNER_PHONE}
           </a>
@@ -213,7 +220,7 @@ export default function ListingDetailPage() {
       {isOwner && (
         <div className="owner-actions">
           <button
-            className="btn btn-secondary"
+            className="btn btn-outline"
             style={{ flex: 1 }}
             onClick={() => nav(`/listing/${id}/edit`)}
           >

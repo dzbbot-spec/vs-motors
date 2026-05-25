@@ -266,23 +266,6 @@ input, select, textarea { font: inherit; color: inherit; }
   border-bottom: 1px solid var(--divider);
 }
 
-.share-btn {
-  position: absolute;
-  top: 16px;
-  right: 12px;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: var(--bg-secondary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  color: var(--hint);
-}
-
-.share-btn:active { opacity: 0.7; }
-
 /* ── Contact Actions ── */
 .contact-actions {
   padding: 12px;
@@ -291,22 +274,6 @@ input, select, textarea { font: inherit; color: inherit; }
   gap: 8px;
   border-bottom: 1px solid var(--divider);
 }
-
-.contact-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 14px;
-  border-radius: var(--radius);
-  font-size: 16px;
-  font-weight: 600;
-  transition: opacity 0.15s;
-}
-
-.contact-btn:active { opacity: 0.7; }
-.contact-btn--tg { background: #0088cc; color: #fff; }
-.contact-btn--wa { background: #25d366; color: #fff; }
-.contact-btn--phone { background: var(--bg-secondary); color: var(--text); }
 
 /* ── Specs ── */
 .specs-section {
@@ -391,38 +358,30 @@ input, select, textarea { font: inherit; color: inherit; }
   background: #d1fae5;
 }
 
-/* ── Buttons ── */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  border-radius: var(--radius);
-  padding: 14px;
+/* ── Кнопка связаться на HomePage ── */
+.home-contact-bar {
+  padding: 10px 12px 4px;
+}
+
+.btn-contact {
+  display: block;
   width: 100%;
-  font-size: 16px;
-  font-weight: 600;
-  transition: opacity 0.15s;
-  user-select: none;
-  white-space: nowrap;
-}
-
-.btn:active { opacity: 0.8; }
-.btn:disabled { opacity: 0.4; pointer-events: none; }
-
-.btn-primary { background: var(--button); color: var(--button-text); }
-.btn-secondary { background: var(--bg-secondary); color: var(--text); }
-.btn-outline {
+  padding: 13px 16px;
   background: transparent;
-  border: 1.5px solid var(--button);
-  color: var(--button);
-}
-.btn-danger {
-  background: transparent;
-  border: 1.5px solid var(--danger);
-  color: var(--danger);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  font-family: inherit;
+  color: var(--text);
+  text-align: center;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
 }
 
+.btn-contact:active { opacity: 0.6; }
+
+/* ── Квадратная кнопка-иконка (удалить) ── */
 .icon-btn {
   width: 44px;
   height: 44px;
@@ -431,7 +390,6 @@ input, select, textarea { font: inherit; color: inherit; }
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--bg-secondary);
 }
 
 /* ── Form ── */

@@ -369,7 +369,7 @@ export default function ListingForm({
       {/* Navigation */}
       <div className="form-nav">
         {step > 0 && (
-          <button className="btn btn-secondary" onClick={goPrev} style={{ flex: 1 }}>
+          <button className="btn btn-outline" onClick={goPrev} style={{ flex: 1 }}>
             Назад
           </button>
         )}
