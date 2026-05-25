@@ -2,51 +2,40 @@ import { getInitData } from '../lib/telegram'
 
 const BASE_URL = import.meta.env.VITE_API_URL ?? ''
 
-async function request<T>(path: string, options: RequestInit = {}, attempt = 0): Promise<T> {
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-    ...(options.headers as Record<string, string>),
-  }
+function xhrRequest<T>(method: string, path: string, body?: string): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest()
+    xhr.open(method, `${BASE_URL}${path}`)
+    xhr.setRequestHeader('Content-Type', 'application/json')
+    const initData = getInitData()
+    if (initData) xhr.setRequestHeader('X-Telegram-Init-Data', initData)
+    xhr.timeout = 50000
 
-  const initData = getInitData()
-  if (initData) headers['X-Telegram-Init-Data'] = initData
-
-  const controller = new AbortController()
-  const timer = setTimeout(() => controller.abort(), 50000)
-
-  try {
-    const res = await fetch(`${BASE_URL}${path}`, { ...options, headers, signal: controller.signal })
-    clearTimeout(timer)
-
-    if (!res.ok) {
-      let detail = res.statusText
-      try {
-        const body = await res.json()
-        if (typeof body.detail === 'string') detail = body.detail
-      } catch { /* ignore */ }
-      throw new Error(detail)
+    xhr.onload = () => {
+      if (xhr.status === 204) { resolve(undefined as T); return }
+      let data: unknown
+      try { data = JSON.parse(xhr.responseText) } catch { data = null }
+      if (xhr.status >= 200 && xhr.status < 300) {
+        resolve(data as T)
+      } else {
+        const msg = (data && typeof data === 'object' && 'detail' in data)
+          ? String((data as { detail: unknown }).detail)
+          : xhr.statusText || 'Ошибка сервера'
+        reject(new Error(msg))
+      }
     }
-
-    if (res.status === 204) return undefined as T
-    return res.json()
-  } catch (e) {
-    clearTimeout(timer)
-    if (e instanceof TypeError && attempt < 2) {
-      await new Promise(r => setTimeout(r, 2000 * (attempt + 1)))
-      return request<T>(path, options, attempt + 1)
-    }
-    throw new Error(
-      e instanceof Error ? (e.message || 'Сетевая ошибка') : 'Сетевая ошибка'
-    )
-  }
+    xhr.onerror = () => reject(new Error('Сетевая ошибка'))
+    xhr.ontimeout = () => reject(new Error('Время ожидания истекло'))
+    xhr.send(body ?? null)
+  })
 }
 
 export const api = {
-  get: <T>(path: string) => request<T>(path),
+  get: <T>(path: string) => xhrRequest<T>('GET', path),
   post: <T>(path: string, body: unknown) =>
-    request<T>(path, { method: 'POST', body: JSON.stringify(body) }),
+    xhrRequest<T>('POST', path, JSON.stringify(body)),
   patch: <T>(path: string, body: unknown) =>
-    request<T>(path, { method: 'PATCH', body: JSON.stringify(body) }),
+    xhrRequest<T>('PATCH', path, JSON.stringify(body)),
   delete: <T>(path: string) =>
-    request<T>(path, { method: 'DELETE' }),
+    xhrRequest<T>('DELETE', path),
 }
