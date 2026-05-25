@@ -36,10 +36,10 @@ interface Props {
 
 const STEP_LABELS = ['Основное', 'Характеристики', 'Детали', 'Фото']
 
-const TRANSMISSIONS = ['Автомат', 'Механика', 'Робот', 'Вариатор']
-const FUELS = ['Бензин', 'Дизель', 'Гибрид', 'Электро', 'Газ']
-const BODIES = ['Седан', 'Кроссовер', 'Внедорожник', 'Хэтчбек', 'Универсал', 'Купе', 'Кабриолет', 'Минивэн', 'Пикап']
-const DRIVES = ['Передний', 'Задний', 'Полный (AWD)', 'Полный (4WD)']
+const TRANSMISSIONS: [string, string][] = [['AUTO','Автомат'],['MANUAL','Механика'],['ROBOT','Робот'],['CVT','Вариатор']]
+const FUELS: [string, string][] = [['PETROL','Бензин'],['DIESEL','Дизель'],['HYBRID','Гибрид'],['ELECTRIC','Электро'],['GAS','Газ']]
+const BODIES: [string, string][] = [['SEDAN','Седан'],['SUV','Кроссовер/Внедорожник'],['HATCHBACK','Хэтчбек'],['WAGON','Универсал'],['COUPE','Купе'],['CONVERTIBLE','Кабриолет'],['MINIVAN','Минивэн'],['PICKUP','Пикап']]
+const DRIVES: [string, string][] = [['FWD','Передний'],['RWD','Задний'],['AWD','Полный']]
 
 const defaultCurrency = import.meta.env.VITE_CURRENCY ?? 'USD'
 
@@ -64,7 +64,6 @@ export default function ListingForm({
     initialPhotos.map(url => ({ url, uploading: false }))
   )
   const [errors, setErrors] = useState<Partial<Record<keyof ListingFormData, string>>>({})
-  const [tapCount, setTapCount] = useState(0)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   // Прогрев бэкенда при переходе на последний шаг
@@ -153,7 +152,6 @@ export default function ListingForm({
   }
 
   const handleSubmit = async () => {
-    setTapCount(c => c + 1)
     if (!validateStep()) return
     const urls = photos.filter(p => !p.uploading).map(p => p.url)
     await onSubmit(form, urls)
@@ -236,21 +234,21 @@ export default function ListingForm({
             <label>Коробка передач</label>
             <select value={form.transmission} onChange={set('transmission')}>
               <option value="">Не указано</option>
-              {TRANSMISSIONS.map(t => <option key={t} value={t}>{t}</option>)}
+              {TRANSMISSIONS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
             </select>
           </div>
           <div className="field">
             <label>Тип топлива</label>
             <select value={form.fuel_type} onChange={set('fuel_type')}>
               <option value="">Не указано</option>
-              {FUELS.map(f => <option key={f} value={f}>{f}</option>)}
+              {FUELS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
             </select>
           </div>
           <div className="field">
             <label>Кузов</label>
             <select value={form.body_type} onChange={set('body_type')}>
               <option value="">Не указано</option>
-              {BODIES.map(b => <option key={b} value={b}>{b}</option>)}
+              {BODIES.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
             </select>
           </div>
           <div className="field">
@@ -288,7 +286,7 @@ export default function ListingForm({
             <label>Привод</label>
             <select value={form.drive_type} onChange={set('drive_type')}>
               <option value="">Не указано</option>
-              {DRIVES.map(d => <option key={d} value={d}>{d}</option>)}
+              {DRIVES.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
             </select>
           </div>
           <div className="field">
@@ -363,13 +361,6 @@ export default function ListingForm({
               rows={5}
             />
           </div>
-        </div>
-      )}
-
-      {/* DEBUG — удалить после диагностики */}
-      {step === 3 && (
-        <div style={{ margin: '0 16px 8px', padding: 8, background: '#fef9c3', borderRadius: 8, fontSize: 12, color: '#713f12' }}>
-          taps:{tapCount} photos:{photos.length} uploading:{photos.filter(p => p.uploading).length} saving:{isSubmitting ? 'yes' : 'no'}
         </div>
       )}
 

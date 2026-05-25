@@ -8,6 +8,11 @@ import PhotoGallery from '../components/PhotoGallery'
 import BottomNav from '../components/BottomNav'
 import type { ListingFull } from '../types'
 
+const TRANSMISSION: Record<string, string> = { AUTO:'Автомат', MANUAL:'Механика', ROBOT:'Робот', CVT:'Вариатор' }
+const FUEL: Record<string, string> = { PETROL:'Бензин', DIESEL:'Дизель', HYBRID:'Гибрид', ELECTRIC:'Электро', GAS:'Газ' }
+const BODY: Record<string, string> = { SEDAN:'Седан', SUV:'Кроссовер/Внедорожник', HATCHBACK:'Хэтчбек', WAGON:'Универсал', COUPE:'Купе', CONVERTIBLE:'Кабриолет', MINIVAN:'Минивэн', PICKUP:'Пикап' }
+const DRIVE: Record<string, string> = { FWD:'Передний', RWD:'Задний', AWD:'Полный' }
+
 const OWNER_TG = import.meta.env.VITE_OWNER_TG_USERNAME ?? ''
 const OWNER_WA = import.meta.env.VITE_OWNER_WHATSAPP ?? ''
 const OWNER_PHONE = import.meta.env.VITE_OWNER_PHONE ?? ''
@@ -101,13 +106,13 @@ export default function ListingDetailPage() {
   const SPECS: Array<{ label: string; value: string | number | null | undefined }> = [
     { label: 'Год', value: listing.year },
     { label: 'Пробег', value: listing.mileage != null ? `${listing.mileage.toLocaleString('ru-RU')} км` : null },
-    { label: 'Коробка', value: listing.transmission },
-    { label: 'Топливо', value: listing.fuel_type },
-    { label: 'Кузов', value: listing.body_type },
+    { label: 'Коробка', value: listing.transmission ? (TRANSMISSION[listing.transmission] ?? listing.transmission) : null },
+    { label: 'Топливо', value: listing.fuel_type ? (FUEL[listing.fuel_type] ?? listing.fuel_type) : null },
+    { label: 'Кузов', value: listing.body_type ? (BODY[listing.body_type] ?? listing.body_type) : null },
     { label: 'Цвет', value: listing.color },
     { label: 'Объём', value: listing.engine_volume != null ? `${listing.engine_volume} л` : null },
     { label: 'Мощность', value: listing.power_hp != null ? `${listing.power_hp} л.с.` : null },
-    { label: 'Привод', value: listing.drive_type },
+    { label: 'Привод', value: listing.drive_type ? (DRIVE[listing.drive_type] ?? listing.drive_type) : null },
     { label: 'Страна', value: listing.country },
   ].filter(s => s.value != null)
 
@@ -141,8 +146,8 @@ export default function ListingDetailPage() {
           {listing.mileage != null && (
             <span className="chip">{listing.mileage.toLocaleString('ru-RU')} км</span>
           )}
-          {listing.fuel_type && <span className="chip">{listing.fuel_type}</span>}
-          {listing.body_type && <span className="chip">{listing.body_type}</span>}
+          {listing.fuel_type && <span className="chip">{FUEL[listing.fuel_type] ?? listing.fuel_type}</span>}
+          {listing.body_type && <span className="chip">{BODY[listing.body_type] ?? listing.body_type}</span>}
         </div>
       </div>
 
