@@ -36,8 +36,11 @@ export default function AddListingPage() {
         status: 'active',
       }
       const created = await api.post<ListingFull>('/api/listings', payload)
-      // TEMP DEBUG
-      alert(`OK id=${created?.id ?? 'undefined'} type=${typeof created}`)
+      // TEMP DEBUG — показываем результат в панели вместо alert
+      setSaving(false)
+      setError(`DEBUG OK: id=${created?.id?.slice(0, 8) ?? 'undef'} type=${typeof created}`)
+      return
+      // eslint-disable-next-line no-unreachable
       nav(`/listing/${created.id}`, { replace: true })
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'Ошибка сохранения')
