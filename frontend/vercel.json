@@ -1,0 +1,16 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://vs-motors-7ssq.onrender.com/api/:path*"
+    },
+    {
+      "source": "/health",
+      "destination": "https://vs-motors-7ssq.onrender.com/health"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
