@@ -64,6 +64,7 @@ export default function ListingForm({
     initialPhotos.map(url => ({ url, uploading: false }))
   )
   const [errors, setErrors] = useState<Partial<Record<keyof ListingFormData, string>>>({})
+  const [tapCount, setTapCount] = useState(0)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const set = (field: keyof ListingFormData) => (
@@ -145,6 +146,7 @@ export default function ListingForm({
   }
 
   const handleSubmit = async () => {
+    setTapCount(c => c + 1)
     if (!validateStep()) return
     const urls = photos.filter(p => !p.uploading).map(p => p.url)
     await onSubmit(form, urls)
@@ -354,6 +356,13 @@ export default function ListingForm({
               rows={5}
             />
           </div>
+        </div>
+      )}
+
+      {/* DEBUG — удалить после диагностики */}
+      {step === 3 && (
+        <div style={{ margin: '0 16px 8px', padding: 8, background: '#fef9c3', borderRadius: 8, fontSize: 12, color: '#713f12' }}>
+          taps:{tapCount} photos:{photos.length} uploading:{photos.filter(p => p.uploading).length} saving:{isSubmitting ? 'yes' : 'no'}
         </div>
       )}
 
