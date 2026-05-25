@@ -18,10 +18,10 @@ function xhrRequest<T>(method: string, path: string, body?: string): Promise<T> 
       if (xhr.status >= 200 && xhr.status < 300) {
         resolve(data as T)
       } else {
-        const msg = (data && typeof data === 'object' && 'detail' in data)
+        const detail = (data && typeof data === 'object' && 'detail' in data)
           ? String((data as { detail: unknown }).detail)
-          : xhr.statusText || 'Ошибка сервера'
-        reject(new Error(msg))
+          : null
+        reject(new Error(detail ?? `[${xhr.status}] ${xhr.responseText.slice(0, 120)}`))
       }
     }
     xhr.onerror = () => reject(new Error('Сетевая ошибка'))
