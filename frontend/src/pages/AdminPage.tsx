@@ -33,7 +33,7 @@ export default function AdminPage() {
       await api.delete(`/api/listings/${id}`)
       setItems(prev => prev.filter(i => i.id !== id))
     } catch (e: unknown) {
-      alert(e instanceof Error ? e.message : 'Ошибка')
+      setError(e instanceof Error ? e.message : 'Ошибка удаления')
     }
   }
 
@@ -43,7 +43,7 @@ export default function AdminPage() {
       const updated = await api.patch<Listing>(`/api/listings/${item.id}`, { status: newStatus })
       setItems(prev => prev.map(i => i.id === item.id ? updated : i))
     } catch (e: unknown) {
-      alert(e instanceof Error ? e.message : 'Ошибка')
+      setError(e instanceof Error ? e.message : 'Ошибка')
     }
   }
 
@@ -53,7 +53,7 @@ export default function AdminPage() {
         <div className="page-header__title">Управление</div>
         <button
           className="btn btn-primary"
-          style={{ marginLeft: 'auto', padding: '8px 16px', fontSize: 14 }}
+          style={{ marginLeft: 'auto', width: 'auto', padding: '8px 16px', fontSize: 14 }}
           onClick={() => nav('/add')}
         >
           + Добавить
@@ -68,11 +68,10 @@ export default function AdminPage() {
         </div>
       ) : items.length === 0 ? (
         <div className="empty-state">
-          <div className="empty-state__icon">📋</div>
           <div className="empty-state__text">Объявлений нет</div>
           <button
             className="btn btn-primary"
-            style={{ marginTop: 8 }}
+            style={{ marginTop: 8, width: 'auto', padding: '12px 24px' }}
             onClick={() => nav('/add')}
           >
             Добавить первое
@@ -81,49 +80,40 @@ export default function AdminPage() {
       ) : (
         <>
           {items.map(item => (
-            <div key={item.id} className="admin-card">
-              <div className="admin-card__thumb">
-                {item.photos[0] ? (
+            <div key={item.id} className="admin-row">
+              <div className="admin-row__thumb">
+                {item.photos[0] && (
                   <img src={item.photos[0]} alt={`${item.brand} ${item.model}`} loading="lazy" />
-                ) : (
-                  <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}>
-                    🚗
-                  </div>
                 )}
               </div>
 
-              <div className="admin-card__info">
-                <div className="admin-card__name">{item.brand} {item.model} {item.year}</div>
-                <div className="admin-card__price">
+              <div className="admin-row__info">
+                <div className="admin-row__name">{item.brand} {item.model} {item.year}</div>
+                <div className="admin-row__meta">
                   {item.price.toLocaleString('ru-RU')} {item.currency}
-                  {' '}
-                  <span className={`status-badge status-badge--${item.status}`}>
-                    {item.status === 'active' ? 'активно' : 'продано'}
-                  </span>
+                  {' · '}
+                  {item.status === 'active' ? 'В продаже' : 'Продано'}
                 </div>
               </div>
 
-              <div className="admin-card__actions">
+              <div className="admin-row__actions">
                 <button
-                  className="icon-btn"
-                  title={item.status === 'active' ? 'Отметить продано' : 'Вернуть в продажу'}
-                  onClick={() => handleToggle(item)}
-                >
-                  {item.status === 'active' ? '✓' : '↩'}
-                </button>
-                <button
-                  className="icon-btn"
-                  title="Редактировать"
+                  className="admin-row__btn"
                   onClick={() => nav(`/listing/${item.id}/edit`)}
                 >
-                  ✏
+                  Изменить
                 </button>
                 <button
-                  className="icon-btn icon-btn--danger"
-                  title="Удалить"
+                  className="admin-row__btn"
+                  onClick={() => handleToggle(item)}
+                >
+                  {item.status === 'active' ? 'Продано' : 'В продаже'}
+                </button>
+                <button
+                  className="admin-row__btn admin-row__btn--danger"
                   onClick={() => handleDelete(item.id)}
                 >
-                  🗑
+                  Удалить
                 </button>
               </div>
             </div>

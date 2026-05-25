@@ -1,6 +1,13 @@
 import { useNavigate } from 'react-router-dom'
 import type { Listing } from '../types'
 
+const FUEL: Record<string, string> = {
+  PETROL: 'Бензин', DIESEL: 'Дизель', HYBRID: 'Гибрид', ELECTRIC: 'Электро', GAS: 'Газ',
+}
+const TRANSMISSION: Record<string, string> = {
+  AUTO: 'Автомат', MANUAL: 'Механика', ROBOT: 'Робот', CVT: 'Вариатор',
+}
+
 interface Props {
   item: Listing
 }
@@ -11,26 +18,28 @@ export default function CarCard({ item }: Props) {
 
   const price = item.price.toLocaleString('ru-RU')
 
+  const meta = [
+    item.year,
+    item.mileage != null ? `${item.mileage.toLocaleString('ru-RU')} км` : null,
+    item.transmission ? (TRANSMISSION[item.transmission] ?? null) : null,
+    item.fuel_type ? (FUEL[item.fuel_type] ?? null) : null,
+  ].filter(Boolean).join(' · ')
+
   return (
-    <div className="car-card" onClick={() => nav(`/listing/${item.id}`)}>
+    <div
+      className={`car-card${item.status === 'sold' ? ' car-card--sold' : ''}`}
+      onClick={() => nav(`/listing/${item.id}`)}
+    >
       <div className="car-card__photo">
-        {photo ? (
-          <img src={photo} alt={`${item.brand} ${item.model}`} loading="lazy" />
-        ) : (
-          <div className="car-card__no-photo">🚗</div>
-        )}
-        {item.status === 'sold' && <span className="badge-sold">Продано</span>}
+        {photo && <img src={photo} alt={`${item.brand} ${item.model}`} loading="lazy" />}
       </div>
 
-      <div className="car-card__info">
+      <div className="car-card__body">
         <div className="car-card__title">{item.brand} {item.model}</div>
-        <div className="car-card__meta">
-          {item.year}
-          {item.mileage != null && <> · {item.mileage.toLocaleString('ru-RU')} км</>}
-          {item.fuel_type && <> · {item.fuel_type}</>}
-        </div>
-        <div className="car-card__price">
-          {price} {item.currency}
+        {meta && <div className="car-card__meta">{meta}</div>}
+        <div className="car-card__footer">
+          <div className="car-card__price">{price} {item.currency}</div>
+          {item.status === 'sold' && <span className="car-card__badge">Продано</span>}
         </div>
       </div>
     </div>

@@ -1,0 +1,12 @@
+:root {
+  --bg: var(--tg-theme-bg-color, #ffffff);
+  --bg-secondary: var(--tg-theme-secondary-bg-color, #f5f5f5);
+  --text: var(--tg-theme-text-color, #000000);
+  --hint: var(--tg-theme-hint-color, #999999);
+  --button: var(--tg-theme-button-color, #000000);
+  --button-text: var(--tg-theme-button-text-color, #ffffff);
+  --divider: rgba(0, 0, 0, 0.08);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --danger: #ff3b30;
+}

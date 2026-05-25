@@ -8,10 +8,10 @@ import PhotoGallery from '../components/PhotoGallery'
 import BottomNav from '../components/BottomNav'
 import type { ListingFull } from '../types'
 
-const TRANSMISSION: Record<string, string> = { AUTO:'Автомат', MANUAL:'Механика', ROBOT:'Робот', CVT:'Вариатор' }
-const FUEL: Record<string, string> = { PETROL:'Бензин', DIESEL:'Дизель', HYBRID:'Гибрид', ELECTRIC:'Электро', GAS:'Газ' }
-const BODY: Record<string, string> = { SEDAN:'Седан', SUV:'Кроссовер/Внедорожник', HATCHBACK:'Хэтчбек', WAGON:'Универсал', COUPE:'Купе', CONVERTIBLE:'Кабриолет', MINIVAN:'Минивэн', PICKUP:'Пикап' }
-const DRIVE: Record<string, string> = { FWD:'Передний', RWD:'Задний', AWD:'Полный' }
+const TRANSMISSION: Record<string, string> = { AUTO: 'Автомат', MANUAL: 'Механика', ROBOT: 'Робот', CVT: 'Вариатор' }
+const FUEL: Record<string, string> = { PETROL: 'Бензин', DIESEL: 'Дизель', HYBRID: 'Гибрид', ELECTRIC: 'Электро', GAS: 'Газ' }
+const BODY: Record<string, string> = { SEDAN: 'Седан', SUV: 'Кроссовер/Внедорожник', HATCHBACK: 'Хэтчбек', WAGON: 'Универсал', COUPE: 'Купе', CONVERTIBLE: 'Кабриолет', MINIVAN: 'Минивэн', PICKUP: 'Пикап' }
+const DRIVE: Record<string, string> = { FWD: 'Передний', RWD: 'Задний', AWD: 'Полный' }
 
 const OWNER_TG = import.meta.env.VITE_OWNER_TG_USERNAME ?? ''
 const OWNER_WA = import.meta.env.VITE_OWNER_WHATSAPP ?? ''
@@ -42,7 +42,7 @@ export default function ListingDetailPage() {
   if (loading) {
     return (
       <div className="page">
-        <div style={{ height: 280, background: 'var(--bg-3)' }} className="skeleton-box" />
+        <div style={{ aspectRatio: '16/9', background: 'var(--bg-secondary)' }} className="skeleton-box" />
         <div style={{ padding: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
           <div className="skeleton-line" style={{ height: 26, width: '70%' }} />
           <div className="skeleton-line" style={{ height: 30, width: '50%' }} />
@@ -83,7 +83,7 @@ export default function ListingDetailPage() {
       nav('/', { replace: true })
     } catch (e: unknown) {
       setDeleting(false)
-      alert(e instanceof Error ? e.message : 'Ошибка удаления')
+      setError(e instanceof Error ? e.message : 'Ошибка удаления')
     }
   }
 
@@ -97,7 +97,7 @@ export default function ListingDetailPage() {
       const updated = await api.patch<ListingFull>(`/api/listings/${id}`, { status: newStatus })
       setListing(updated)
     } catch (e: unknown) {
-      alert(e instanceof Error ? e.message : 'Ошибка')
+      setError(e instanceof Error ? e.message : 'Ошибка')
     } finally {
       setToggling(false)
     }
@@ -125,30 +125,15 @@ export default function ListingDetailPage() {
     <div className="page">
       <PhotoGallery photos={listing.photos} alt={title} />
 
-      {/* Header */}
-      <div className="detail-header">
-        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8 }}>
-          <div>
-            <div className="detail-title">{title}</div>
-            <div className="detail-price">{price} {listing.currency}</div>
-          </div>
-          <button className="share-btn" onClick={handleShare} aria-label="Поделиться">
-            ↗
-          </button>
+      {/* Title, price, status */}
+      <div style={{ position: 'relative' }}>
+        <div className="detail-title" style={{ paddingRight: 52 }}>{title}</div>
+        <div className="detail-price">{price} {listing.currency}</div>
+        <div className="detail-status">
+          {listing.status === 'sold' && <span className="status-badge">Продано</span>}
+          {listing.status === 'active' && <span className="status-badge status-badge--active">В продаже</span>}
         </div>
-        <div className="detail-meta">
-          {listing.status === 'sold' && (
-            <span className="status-badge status-badge--sold">Продано</span>
-          )}
-          {listing.status === 'active' && (
-            <span className="status-badge status-badge--active">В продаже</span>
-          )}
-          {listing.mileage != null && (
-            <span className="chip">{listing.mileage.toLocaleString('ru-RU')} км</span>
-          )}
-          {listing.fuel_type && <span className="chip">{FUEL[listing.fuel_type] ?? listing.fuel_type}</span>}
-          {listing.body_type && <span className="chip">{BODY[listing.body_type] ?? listing.body_type}</span>}
-        </div>
+        <button className="share-btn" onClick={handleShare} aria-label="Поделиться">↗</button>
       </div>
 
       {/* Contact buttons */}
@@ -159,7 +144,6 @@ export default function ListingDetailPage() {
           rel="noreferrer"
           className="contact-btn contact-btn--tg"
         >
-          <span style={{ fontSize: 20 }}>✈</span>
           Написать в Telegram
         </a>
         {OWNER_WA && (
@@ -169,7 +153,6 @@ export default function ListingDetailPage() {
             rel="noreferrer"
             className="contact-btn contact-btn--wa"
           >
-            <span style={{ fontSize: 20 }}>💬</span>
             WhatsApp
           </a>
         )}
@@ -178,7 +161,6 @@ export default function ListingDetailPage() {
             href={`tel:${OWNER_PHONE}`}
             className="contact-btn contact-btn--phone"
           >
-            <span style={{ fontSize: 20 }}>📞</span>
             {OWNER_PHONE}
           </a>
         )}
@@ -201,7 +183,7 @@ export default function ListingDetailPage() {
 
       {/* VIN */}
       {listing.vin && (
-        <div className="specs-section" style={{ borderTop: '1px solid var(--border)' }}>
+        <div className="vin-section">
           <div className="specs-title">VIN</div>
           <div style={{ fontFamily: 'monospace', fontSize: 15, letterSpacing: '0.05em' }}>
             {listing.vin}
@@ -235,7 +217,7 @@ export default function ListingDetailPage() {
             style={{ flex: 1 }}
             onClick={() => nav(`/listing/${id}/edit`)}
           >
-            ✏ Редактировать
+            Редактировать
           </button>
           <button
             className="btn btn-outline"
@@ -253,9 +235,8 @@ export default function ListingDetailPage() {
             onClick={handleDelete}
             disabled={deleting}
             aria-label="Удалить"
-            style={{ minWidth: 44 }}
           >
-            {deleting ? <div className="spinner" /> : '🗑'}
+            {deleting ? <div className="spinner" /> : '×'}
           </button>
         </div>
       )}

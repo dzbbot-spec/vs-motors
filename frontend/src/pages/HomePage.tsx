@@ -6,8 +6,6 @@ import CarCard from '../components/CarCard'
 import CardSkeleton from '../components/CardSkeleton'
 import BottomNav from '../components/BottomNav'
 
-const OWNER_TG = import.meta.env.VITE_OWNER_TG_USERNAME ?? ''
-
 export default function HomePage() {
   const { items, loading, initialLoading, hasNext, error, loadMore } = useListings()
   const { isOwner } = useTelegram()
@@ -31,47 +29,34 @@ export default function HomePage() {
     return () => obs.disconnect()
   }, [handleObserver])
 
-  const openContact = () => {
-    window.open(`https://t.me/${OWNER_TG}`, '_blank')
-  }
-
   return (
     <div className="page">
-      {/* Hero */}
-      <div className="hero">
-        <div className="hero__title">VS MOTORS</div>
-        <div className="hero__sub">АВТОМОБИЛИ ПРЕМИУМ КЛАССА</div>
-        <button className="hero__contact" onClick={openContact}>
-          ✉ Написать
-        </button>
+      <div className="home-header">
+        <div className="home-header__title">VS MOTORS</div>
       </div>
 
-      {/* Listings */}
       {error && <div className="error-msg">{error}</div>}
 
       {initialLoading ? (
-        <>
+        <div className="card-list">
           <CardSkeleton />
           <CardSkeleton />
           <CardSkeleton />
-          <CardSkeleton />
-        </>
+        </div>
       ) : items.length === 0 ? (
         <div className="empty-state">
-          <div className="empty-state__icon">🚗</div>
           <div className="empty-state__text">Объявлений пока нет</div>
         </div>
       ) : (
-        <>
+        <div className="card-list">
           {items.map(item => (
             <CarCard key={item.id} item={item} />
           ))}
           {loading && <CardSkeleton />}
           <div ref={sentinelRef} className="load-more-trigger" />
-        </>
+        </div>
       )}
 
-      {/* FAB — owner only */}
       {isOwner && (
         <button className="fab" onClick={() => nav('/add')} aria-label="Добавить объявление">
           +

@@ -34,7 +34,7 @@ interface Props {
   serverError?: string | null
 }
 
-const STEP_LABELS = ['Основное', 'Характеристики', 'Детали', 'Фото']
+const STEP_LABELS = ['Основное', 'Характеристики', 'Детали', 'Фото и описание']
 
 const TRANSMISSIONS: [string, string][] = [['AUTO','Автомат'],['MANUAL','Механика'],['ROBOT','Робот'],['CVT','Вариатор']]
 const FUELS: [string, string][] = [['PETROL','Бензин'],['DIESEL','Дизель'],['HYBRID','Гибрид'],['ELECTRIC','Электро'],['GAS','Газ']]
@@ -159,13 +159,11 @@ export default function ListingForm({
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
-      {/* Step indicator */}
-      <div className="step-indicator">
-        {STEP_LABELS.map((_, i) => (
-          <div key={i} className={`step-dot ${i === step ? 'active' : i < step ? 'done' : ''}`} />
-        ))}
-        <span className="step-label">{STEP_LABELS[step]}</span>
+      {/* Progress bar */}
+      <div className="progress-bar">
+        <div className="progress-bar__fill" style={{ width: `${((step + 1) / 4) * 100}%` }} />
       </div>
+      <div className="step-hint">Шаг {step + 1} из 4 — {STEP_LABELS[step]}</div>
 
       {/* Step 0: Basic info */}
       {step === 0 && (
@@ -314,9 +312,8 @@ export default function ListingForm({
               className="photo-upload-area"
               onClick={() => fileInputRef.current?.click()}
             >
-              <span style={{ fontSize: 28 }}>📷</span>
-              <span>Нажмите для добавления фото</span>
-              <span style={{ fontSize: 12, color: 'var(--text-3)' }}>
+              <span style={{ fontSize: 15 }}>Добавить фото</span>
+              <span style={{ fontSize: 12, color: 'var(--hint)' }}>
                 {photos.length > 0 ? `Добавлено: ${photos.length}/10` : 'До 10 фото'}
               </span>
             </div>
