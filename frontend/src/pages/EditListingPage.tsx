@@ -107,7 +107,6 @@ export default function EditListingPage() {
       {error && <div className="error-msg">{error}</div>}
 
       <ListingForm
-        listingId={id}
         initial={initial}
         initialPhotos={listing.photos}
         onSubmit={handleSubmit}

@@ -26,7 +26,6 @@ interface PhotoEntry {
 }
 
 interface Props {
-  listingId?: string
   initial?: Partial<ListingFormData>
   initialPhotos?: string[]
   onSubmit: (data: ListingFormData, photos: string[]) => Promise<void>
@@ -51,7 +50,6 @@ const defaultForm: ListingFormData = {
 }
 
 export default function ListingForm({
-  listingId,
   initial = {},
   initialPhotos = [],
   onSubmit,
@@ -94,27 +92,25 @@ export default function ListingForm({
   const goPrev = () => setStep(s => Math.max(0, s - 1))
 
   const handleFiles = async (files: FileList) => {
-    const newEntries: PhotoEntry[] = []
     const fileArr = Array.from(files).slice(0, 10 - photos.length)
-
-    for (const file of fileArr) {
-      const entry: PhotoEntry = { url: URL.createObjectURL(file), uploading: true }
-      newEntries.push(entry)
-    }
-
+    const newEntries: PhotoEntry[] = fileArr.map(f => ({
+      url: URL.createObjectURL(f),
+      uploading: true,
+    }))
     setPhotos(p => [...p, ...newEntries])
 
-    for (let i = 0; i < fileArr.length; i++) {
-      const file = fileArr[i]
-      try {
-        const sigData = await api.post<{
-          timestamp: number
-          signature: string
-          api_key: string
-          cloud_name: string
-          folder: string
-        }>(`/api/listings/${listingId}/photos`, {})
+    // Получаем подпись один раз для всего батча
+    let sigData: { timestamp: number; signature: string; api_key: string; cloud_name: string; folder: string }
+    try {
+      sigData = await api.post('/api/owner/upload-signature', {})
+    } catch {
+      setPhotos(p => p.filter(e => !newEntries.some(n => n.url === e.url)))
+      return
+    }
 
+    await Promise.all(fileArr.map(async (file, i) => {
+      const localUrl = newEntries[i].url
+      try {
         const fd = new FormData()
         fd.append('file', file)
         fd.append('api_key', sigData.api_key)
@@ -130,16 +126,16 @@ export default function ListingForm({
         const cloudUrl: string = cloud.secure_url
 
         setPhotos(p => {
-          const idx = p.findIndex(e => e.url === newEntries[i].url)
+          const idx = p.findIndex(e => e.url === localUrl)
           if (idx === -1) return p
           const next = [...p]
           next[idx] = { url: cloudUrl, uploading: false }
           return next
         })
       } catch {
-        setPhotos(p => p.filter(e => e.url !== newEntries[i].url))
+        setPhotos(p => p.filter(e => e.url !== localUrl))
       }
-    }
+    }))
   }
 
   const removePhoto = (url: string) => {
@@ -305,53 +301,45 @@ export default function ListingForm({
         <div className="form-step">
           <div className="field">
             <label>Фотографии</label>
-            {!listingId ? (
-              <div className="error-msg">
-                Сначала нужно создать объявление — фото загружаются после создания.
-              </div>
-            ) : (
-              <>
-                <div
-                  className="photo-upload-area"
-                  onClick={() => fileInputRef.current?.click()}
-                >
-                  <span style={{ fontSize: 28 }}>📷</span>
-                  <span>Нажмите для добавления фото</span>
-                  <span style={{ fontSize: 12, color: 'var(--text-3)' }}>
-                    Осталось мест: {10 - photos.length}
-                  </span>
-                </div>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  style={{ display: 'none' }}
-                  onChange={e => e.target.files && handleFiles(e.target.files)}
-                />
-                {photos.length > 0 && (
-                  <div className="photo-grid">
-                    {photos.map((p, i) => (
-                      <div key={i} className="photo-thumb">
-                        <img src={p.url} alt={`Фото ${i + 1}`} />
-                        {p.uploading ? (
-                          <div className="photo-thumb__uploading">
-                            <div className="spinner" />
-                          </div>
-                        ) : (
-                          <button
-                            className="photo-thumb__del"
-                            onClick={() => removePhoto(p.url)}
-                            aria-label="Удалить фото"
-                          >
-                            ×
-                          </button>
-                        )}
+            <div
+              className="photo-upload-area"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <span style={{ fontSize: 28 }}>📷</span>
+              <span>Нажмите для добавления фото</span>
+              <span style={{ fontSize: 12, color: 'var(--text-3)' }}>
+                {photos.length > 0 ? `Добавлено: ${photos.length}/10` : 'До 10 фото'}
+              </span>
+            </div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              multiple
+              style={{ display: 'none' }}
+              onChange={e => e.target.files && handleFiles(e.target.files)}
+            />
+            {photos.length > 0 && (
+              <div className="photo-grid">
+                {photos.map((p, i) => (
+                  <div key={i} className="photo-thumb">
+                    <img src={p.url} alt={`Фото ${i + 1}`} />
+                    {p.uploading ? (
+                      <div className="photo-thumb__uploading">
+                        <div className="spinner" />
                       </div>
-                    ))}
+                    ) : (
+                      <button
+                        className="photo-thumb__del"
+                        onClick={() => removePhoto(p.url)}
+                        aria-label="Удалить фото"
+                      >
+                        ×
+                      </button>
+                    )}
                   </div>
-                )}
-              </>
+                ))}
+              </div>
             )}
           </div>
 

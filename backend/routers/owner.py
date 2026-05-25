@@ -114,6 +114,26 @@ async def delete_listing(listing_id: UUID):
         raise HTTPException(status_code=404, detail="Объявление не найдено")
 
 
+@router.post("/owner/upload-signature")
+async def upload_signature_standalone():
+    """Подпись для загрузки фото до создания объявления."""
+    cloudinary.config(cloudinary_url=settings.CLOUDINARY_URL)
+    timestamp = int(time.time())
+    folder = settings.CLOUDINARY_FOLDER
+    params_to_sign = f"folder={folder}&timestamp={timestamp}"
+    api_secret = cloudinary.config().api_secret
+    signature = hashlib.sha1(
+        (params_to_sign + api_secret).encode()
+    ).hexdigest()
+    return {
+        "timestamp": timestamp,
+        "signature": signature,
+        "api_key": cloudinary.config().api_key,
+        "cloud_name": cloudinary.config().cloud_name,
+        "folder": folder,
+    }
+
+
 @router.post("/listings/{listing_id}/photos")
 async def get_upload_signature(listing_id: UUID):
     """Возвращает signed параметры для прямой загрузки в Cloudinary."""
