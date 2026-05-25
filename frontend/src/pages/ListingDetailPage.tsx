@@ -125,14 +125,17 @@ export default function ListingDetailPage() {
     <div className="page">
       <PhotoGallery photos={listing.photos} alt={title} />
 
-      {/* Title, price, status */}
+      {/* Заголовок и цена */}
       <div style={{ position: 'relative' }}>
         <div className="detail-title" style={{ paddingRight: 52 }}>{title}</div>
         <div className="detail-price">{price} {listing.currency}</div>
-        <div className="detail-status">
-          {listing.status === 'sold' && <span className="status-badge">Продано</span>}
-          {listing.status === 'active' && <span className="status-badge status-badge--active">В продаже</span>}
+
+        {/* Pill-статус */}
+        <div className={`detail-status ${listing.status === 'active' ? 'detail-status--active' : 'detail-status--sold'}`}>
+          {listing.status === 'active' ? 'В продаже' : 'Продано'}
         </div>
+
+        {/* Поделиться */}
         <button
           className="btn btn-ghost btn-sm"
           onClick={handleShare}
@@ -143,13 +146,13 @@ export default function ListingDetailPage() {
         </button>
       </div>
 
-      {/* Contact buttons */}
-      <div className="contact-actions">
+      {/* Контакты */}
+      <div className="detail-contacts">
         <a
           href={`https://t.me/${OWNER_TG}`}
           target="_blank"
           rel="noreferrer"
-          className="btn btn-outline"
+          className="detail-contact-btn"
         >
           Написать в Telegram
         </a>
@@ -158,7 +161,7 @@ export default function ListingDetailPage() {
             href={`https://wa.me/${OWNER_WA}`}
             target="_blank"
             rel="noreferrer"
-            className="btn btn-outline"
+            className="detail-contact-btn"
           >
             WhatsApp
           </a>
@@ -166,42 +169,42 @@ export default function ListingDetailPage() {
         {OWNER_PHONE && (
           <a
             href={`tel:${OWNER_PHONE}`}
-            className="btn btn-outline"
+            className="detail-contact-btn"
           >
             {OWNER_PHONE}
           </a>
         )}
       </div>
 
-      {/* Specs */}
+      {/* Характеристики */}
       {SPECS.length > 0 && (
-        <div className="specs-section">
-          <div className="specs-title">Характеристики</div>
-          <div className="specs-grid">
+        <>
+          <div className="detail-specs-title">Характеристики</div>
+          <div className="detail-specs-grid">
             {SPECS.map(s => (
-              <div key={s.label} className="spec-item">
-                <div className="spec-item__label">{s.label}</div>
-                <div className="spec-item__value">{s.value}</div>
+              <div key={s.label} className="detail-spec-block">
+                <div className="detail-spec-label">{s.label}</div>
+                <div className="detail-spec-value">{s.value}</div>
               </div>
             ))}
           </div>
-        </div>
+        </>
       )}
 
       {/* VIN */}
       {listing.vin && (
-        <div className="vin-section">
-          <div className="specs-title">VIN</div>
-          <div style={{ fontFamily: 'monospace', fontSize: 15, letterSpacing: '0.05em' }}>
+        <>
+          <div className="detail-specs-title">VIN</div>
+          <div style={{ padding: '0 16px 20px', fontFamily: 'monospace', fontSize: 15, letterSpacing: '0.05em' }}>
             {listing.vin}
           </div>
-        </div>
+        </>
       )}
 
-      {/* Description */}
+      {/* Описание */}
       {listing.description && (
         <div className="desc-section">
-          <div className="specs-title">Описание</div>
+          <div className="detail-specs-title" style={{ padding: '0 0 10px' }}>Описание</div>
           <div className="desc-text">
             {descExpanded ? listing.description : descShort}
           </div>
@@ -216,21 +219,19 @@ export default function ListingDetailPage() {
         </div>
       )}
 
-      {/* Owner actions */}
+      {/* Кнопки владельца */}
       {isOwner && (
-        <div className="owner-actions">
+        <div className="detail-owner-actions">
           <button
-            className="btn btn-outline"
-            style={{ flex: 1 }}
+            className="detail-owner-btn"
             onClick={() => nav(`/listing/${id}/edit`)}
           >
             Редактировать
           </button>
           <button
-            className="btn btn-outline"
+            className="detail-owner-btn"
             onClick={handleToggleStatus}
             disabled={toggling}
-            style={{ flex: 1 }}
           >
             {toggling
               ? <div className="spinner spinner--dark" />
@@ -238,7 +239,7 @@ export default function ListingDetailPage() {
             }
           </button>
           <button
-            className="btn btn-danger icon-btn"
+            className="detail-owner-btn detail-owner-btn--danger"
             onClick={handleDelete}
             disabled={deleting}
             aria-label="Удалить"
