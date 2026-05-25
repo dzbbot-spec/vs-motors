@@ -16,10 +16,10 @@ async def create_pool() -> asyncpg.Pool:
     )
 
 
-async def check_db() -> bool:
+async def check_db() -> tuple[bool, str | None]:
     try:
         async with pool.acquire() as conn:
             await conn.fetchval("SELECT 1")
-        return True
-    except Exception:
-        return False
+        return True, None
+    except Exception as e:
+        return False, str(e)

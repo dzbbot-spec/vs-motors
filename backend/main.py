@@ -39,4 +39,10 @@ app.include_router(owner_router)
 
 @app.get("/health")
 async def health():
-    return {"status": "ok", "db": "ok" if await database.check_db() else "error"}
+    db_ok, db_err = await database.check_db()
+    return {
+        "status": "ok",
+        "db": "ok" if db_ok else "error",
+        "db_detail": db_err,
+        "pool": database.pool is not None,
+    }
