@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 import { api } from '../api/client'
 import { useBackButton } from '../hooks/useBackButton'
 import ListingForm, { type ListingFormData } from '../components/ListingForm'
-import BottomNav from '../components/BottomNav'
 import type { ListingFull } from '../types'
 
 export default function AddListingPage() {
@@ -45,7 +44,7 @@ export default function AddListingPage() {
   }
 
   return (
-    <div className="page" style={{ display: 'flex', flexDirection: 'column' }}>
+    <div className="page" style={{ display: 'flex', flexDirection: 'column', paddingBottom: 0 }}>
       <div className="page-header">
         <div className="page-header__title">Новое объявление</div>
       </div>
@@ -57,8 +56,6 @@ export default function AddListingPage() {
         submitLabel="Опубликовать"
         isSubmitting={saving}
       />
-
-      <BottomNav />
     </div>
   )
 }

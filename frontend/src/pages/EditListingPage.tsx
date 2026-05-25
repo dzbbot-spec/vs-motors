@@ -3,7 +3,6 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { api } from '../api/client'
 import { useBackButton } from '../hooks/useBackButton'
 import ListingForm, { type ListingFormData } from '../components/ListingForm'
-import BottomNav from '../components/BottomNav'
 import type { ListingFull } from '../types'
 
 export default function EditListingPage() {
@@ -65,7 +64,6 @@ export default function EditListingPage() {
         <div style={{ padding: 24, display: 'flex', justifyContent: 'center' }}>
           <div className="spinner spinner--dark" />
         </div>
-        <BottomNav />
       </div>
     )
   }
@@ -74,7 +72,6 @@ export default function EditListingPage() {
     return (
       <div className="page">
         <div className="error-msg">{error ?? 'Объявление не найдено'}</div>
-        <BottomNav />
       </div>
     )
   }
@@ -99,7 +96,7 @@ export default function EditListingPage() {
   }
 
   return (
-    <div className="page" style={{ display: 'flex', flexDirection: 'column' }}>
+    <div className="page" style={{ display: 'flex', flexDirection: 'column', paddingBottom: 0 }}>
       <div className="page-header">
         <div className="page-header__title">Редактировать</div>
       </div>
@@ -113,8 +110,6 @@ export default function EditListingPage() {
         submitLabel="Сохранить"
         isSubmitting={saving}
       />
-
-      <BottomNav />
     </div>
   )
 }
