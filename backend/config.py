@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     CLOUDINARY_FOLDER: str = "vs-motors"
     MINI_APP_URL: str = ""
     CORS_ORIGINS: str = ""
+    WEBHOOK_URL: str = ""
 
     @property
     def cors_origins_list(self) -> list[str]:
