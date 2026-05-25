@@ -1,13 +1,17 @@
 :root {
-  --bg: var(--tg-theme-bg-color, #ffffff);
-  --bg-secondary: var(--tg-theme-secondary-bg-color, #f5f5f5);
-  --text: var(--tg-theme-text-color, #000000);
-  --hint: var(--tg-theme-hint-color, #999999);
-  --button: var(--tg-theme-button-color, #000000);
-  --button-text: var(--tg-theme-button-text-color, #ffffff);
+  --bg: #ffffff;
+  --bg-secondary: #f5f5f5;
+  --text: #000000;
+  --hint: #999999;
+  --button: #000000;
+  --button-text: #ffffff;
   --divider: rgba(0, 0, 0, 0.08);
   --border: rgba(0, 0, 0, 0.12);
   --radius: 12px;
   --radius-sm: 8px;
+  --radius-pill: 50px;
+  --radius-block: 14px;
+  --shadow-btn: 0 1px 4px rgba(0,0,0,0.10), 0 0 0 1px rgba(0,0,0,0.06);
+  --shadow-card: 0 2px 8px rgba(0,0,0,0.07);
   --danger: #ff3b30;
 }
