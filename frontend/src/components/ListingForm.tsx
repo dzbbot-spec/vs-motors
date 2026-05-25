@@ -41,8 +41,10 @@ const FUELS = ['Бензин', 'Дизель', 'Гибрид', 'Электро',
 const BODIES = ['Седан', 'Кроссовер', 'Внедорожник', 'Хэтчбек', 'Универсал', 'Купе', 'Кабриолет', 'Минивэн', 'Пикап']
 const DRIVES = ['Передний', 'Задний', 'Полный (AWD)', 'Полный (4WD)']
 
+const defaultCurrency = import.meta.env.VITE_CURRENCY ?? 'USD'
+
 const defaultForm: ListingFormData = {
-  brand: '', model: '', year: '', price: '', currency: 'USD',
+  brand: '', model: '', year: '', price: '', currency: defaultCurrency,
   mileage: '', transmission: '', fuel_type: '', body_type: '', color: '',
   engine_volume: '', power_hp: '', drive_type: '', vin: '', country: '',
   description: '',
