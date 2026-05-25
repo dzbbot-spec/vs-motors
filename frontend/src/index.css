@@ -54,7 +54,10 @@ input, select, textarea { font: inherit; color: inherit; }
 
 /* ── Home Header ── */
 .home-header {
-  padding: 16px 12px 8px;
+  padding: 12px 12px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .home-header__title {
@@ -63,12 +66,38 @@ input, select, textarea { font: inherit; color: inherit; }
   letter-spacing: -0.5px;
 }
 
-/* ── Card List ── */
-.card-list {
-  padding: 12px;
+.home-header__right {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.layout-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--hint);
+  border-radius: var(--radius-sm);
+  transition: color 0.15s;
+}
+
+.layout-btn.active { color: var(--text); }
+
+/* ── Content containers ── */
+.home-content--list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
+  padding: 12px;
+}
+
+.home-content--grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 12px;
 }
 
 /* ── Car Card ── */
@@ -127,6 +156,36 @@ input, select, textarea { font: inherit; color: inherit; }
   background: var(--bg-secondary);
   padding: 2px 8px;
   border-radius: 20px;
+}
+
+/* ── Car Card горизонтальный (вид список) ── */
+.car-card--horizontal {
+  display: flex;
+  flex-direction: row;
+}
+
+.car-card--horizontal .car-card__photo {
+  width: 38%;
+  flex-shrink: 0;
+  aspect-ratio: auto;
+  min-height: 110px;
+}
+
+.car-card--horizontal .car-card__body {
+  flex: 1;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.car-card--horizontal .car-card__price {
+  font-size: 16px;
+}
+
+.car-card--horizontal .car-card__meta {
+  font-size: 12px;
 }
 
 /* ── Gallery ── */

@@ -10,9 +10,10 @@ const TRANSMISSION: Record<string, string> = {
 
 interface Props {
   item: Listing
+  layout?: 'horizontal' | 'vertical'
 }
 
-export default function CarCard({ item }: Props) {
+export default function CarCard({ item, layout = 'vertical' }: Props) {
   const nav = useNavigate()
   const photo = item.photos[0] ?? null
 
@@ -25,11 +26,14 @@ export default function CarCard({ item }: Props) {
     item.fuel_type ? (FUEL[item.fuel_type] ?? null) : null,
   ].filter(Boolean).join(' · ')
 
+  const cls = [
+    'car-card',
+    item.status === 'sold' ? 'car-card--sold' : '',
+    layout === 'horizontal' ? 'car-card--horizontal' : '',
+  ].filter(Boolean).join(' ')
+
   return (
-    <div
-      className={`car-card${item.status === 'sold' ? ' car-card--sold' : ''}`}
-      onClick={() => nav(`/listing/${item.id}`)}
-    >
+    <div className={cls} onClick={() => nav(`/listing/${item.id}`)}>
       <div className="car-card__photo">
         {photo && <img src={photo} alt={`${item.brand} ${item.model}`} loading="lazy" />}
       </div>
