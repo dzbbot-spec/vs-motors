@@ -70,22 +70,13 @@ export default function HomePage() {
     <div className="page">
       <div className="home-header">
         <div className="home-header__title">VS MOTORS</div>
-        <div className="home-header__right">
-          <button
-            className={`layout-btn${layout === 'list' ? ' active' : ''}`}
-            onClick={() => toggleLayout('list')}
-            aria-label="Список"
-          >
-            <IconList />
-          </button>
-          <button
-            className={`layout-btn${layout === 'grid' ? ' active' : ''}`}
-            onClick={() => toggleLayout('grid')}
-            aria-label="Плитка"
-          >
-            <IconGrid />
-          </button>
-        </div>
+        <button
+          className="layout-btn active"
+          onClick={() => toggleLayout(layout === 'list' ? 'grid' : 'list')}
+          aria-label={layout === 'list' ? 'Переключить в плитку' : 'Переключить в список'}
+        >
+          {layout === 'list' ? <IconGrid /> : <IconList />}
+        </button>
       </div>
 
       {error && <div className="error-msg">{error}</div>}
