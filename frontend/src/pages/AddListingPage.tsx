@@ -55,6 +55,7 @@ export default function AddListingPage() {
         onSubmit={handleSubmit}
         submitLabel="Опубликовать"
         isSubmitting={saving}
+        serverError={error}
       />
     </div>
   )

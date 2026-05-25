@@ -109,6 +109,7 @@ export default function EditListingPage() {
         onSubmit={handleSubmit}
         submitLabel="Сохранить"
         isSubmitting={saving}
+        serverError={error}
       />
     </div>
   )

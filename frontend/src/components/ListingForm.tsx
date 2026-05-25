@@ -31,6 +31,7 @@ interface Props {
   onSubmit: (data: ListingFormData, photos: string[]) => Promise<void>
   submitLabel?: string
   isSubmitting?: boolean
+  serverError?: string | null
 }
 
 const STEP_LABELS = ['Основное', 'Характеристики', 'Детали', 'Фото']
@@ -55,6 +56,7 @@ export default function ListingForm({
   onSubmit,
   submitLabel = 'Опубликовать',
   isSubmitting = false,
+  serverError = null,
 }: Props) {
   const [step, setStep] = useState(0)
   const [form, setForm] = useState<ListingFormData>({ ...defaultForm, ...initial })
@@ -353,6 +355,11 @@ export default function ListingForm({
             />
           </div>
         </div>
+      )}
+
+      {/* Server error */}
+      {serverError && (
+        <div className="error-msg" style={{ margin: '0 16px 8px' }}>{serverError}</div>
       )}
 
       {/* Navigation */}
