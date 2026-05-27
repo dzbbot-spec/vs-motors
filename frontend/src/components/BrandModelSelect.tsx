@@ -19,7 +19,7 @@ export default function BrandModelSelect({ brand, model, onBrandChange, onModelC
   const modelRef = useRef<HTMLDivElement>(null)
 
   const filteredBrands = CAR_DATABASE.filter(b =>
-    b.name.toLowerCase().startsWith(brandQuery.toLowerCase())
+    b.name.toLowerCase().includes(brandQuery.toLowerCase())
   ).slice(0, 8)
 
   const selectedBrand = CAR_DATABASE.find(b =>
@@ -27,7 +27,7 @@ export default function BrandModelSelect({ brand, model, onBrandChange, onModelC
   )
   const filteredModels = selectedBrand
     ? selectedBrand.models.filter(m =>
-        m.name.toLowerCase().startsWith(modelQuery.toLowerCase())
+        m.name.toLowerCase().includes(modelQuery.toLowerCase())
       ).slice(0, 8)
     : []
 
@@ -63,14 +63,18 @@ export default function BrandModelSelect({ brand, model, onBrandChange, onModelC
           className="bms-input"
           value={brandQuery}
           placeholder="Toyota, BMW, Lada..."
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
+          spellCheck={false}
           onChange={e => { setBrandQuery(e.target.value); setShowBrands(true) }}
           onFocus={() => setShowBrands(true)}
           // Синхронизируем введённое значение с формой при потере фокуса
           onBlur={() => { if (brandQuery !== brand) onBrandChange(brandQuery) }}
         />
-        {showBrands && filteredBrands.length > 0 && (
+        {showBrands && (brandQuery === '' ? CAR_DATABASE.slice(0, 8) : filteredBrands).length > 0 && (
           <div className="bms-dropdown">
-            {filteredBrands.map(b => (
+            {(brandQuery === '' ? CAR_DATABASE.slice(0, 8) : filteredBrands).map(b => (
               <button key={b.name} className="bms-option" onMouseDown={() => selectBrand(b.name)}>
                 {b.name}
               </button>
@@ -92,9 +96,9 @@ export default function BrandModelSelect({ brand, model, onBrandChange, onModelC
           // Синхронизируем введённое значение с формой при потере фокуса
           onBlur={() => { if (modelQuery !== model) onModelChange(modelQuery) }}
         />
-        {showModels && filteredModels.length > 0 && (
+        {showModels && selectedBrand && (
           <div className="bms-dropdown">
-            {filteredModels.map(m => (
+            {(modelQuery === '' ? selectedBrand.models.slice(0, 8) : filteredModels).map(m => (
               <button key={m.name} className="bms-option" onMouseDown={() => selectModel(m)}>
                 <span className="bms-option__name">{m.name}</span>
                 <span className="bms-option__hint">{m.engines.join(', ')} л · до {m.power[1]} л.с.</span>
