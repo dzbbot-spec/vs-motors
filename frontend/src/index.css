@@ -286,34 +286,49 @@ input, select, textarea { font: inherit; color: inherit; }
   color: var(--hint);
 }
 
-/* Стопка кнопок контактов */
+/* Контакты — круглые иконки в ряд */
 .detail-contacts {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 0 16px 20px;
+  flex-direction: row;
+  justify-content: center;
+  gap: 24px;
+  margin: 16px 12px;
 }
 
-.detail-contact-btn {
-  display: block;
-  width: 100%;
-  padding: 15px 16px;
-  border-radius: var(--radius-pill);
-  background: var(--bg);
+.detail-contact-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background: none;
   border: none;
-  box-shadow: var(--shadow-btn);
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text);
-  text-align: center;
   cursor: pointer;
-  transition: opacity 0.15s ease, transform 0.1s ease;
+  padding: 0;
   font-family: inherit;
 }
+.detail-contact-icon:active .detail-contact-icon__circle {
+  opacity: 0.6;
+  transform: scale(0.94);
+}
 
-.detail-contact-btn:active {
-  opacity: 0.7;
-  transform: scale(0.98);
+.detail-contact-icon__circle {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.10), 0 0 0 1px rgba(0,0,0,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text, #000);
+  transition: opacity 0.15s ease, transform 0.1s ease;
+}
+
+.detail-contact-icon__label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--hint, #999);
+  font-family: inherit;
 }
 
 /* Заголовок секций */

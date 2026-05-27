@@ -133,28 +133,42 @@ export default function ListingDetailPage() {
         </span>
       </div>
 
-      {/* Кнопки контактов */}
+      {/* Кнопки контактов — круглые иконки в ряд */}
       <div className="detail-contacts">
-        <button
-          className="detail-contact-btn"
-          onClick={() => window.open(`tg://resolve?domain=${import.meta.env.VITE_OWNER_TG_USERNAME}`)}
-        >
-          Написать в Telegram
+        <button className="detail-contact-icon" onClick={() =>
+          window.open(`tg://resolve?domain=${import.meta.env.VITE_OWNER_TG_USERNAME}`)
+        }>
+          <div className="detail-contact-icon__circle">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <path d="M21.8 2.15L2.4 9.8c-1.3.52-1.29 1.25-.24 1.57l4.9 1.53 11.37-7.18c.54-.33 1.03-.15.63.21L8.8 16.13l-.37 5.1c.54 0 .78-.25 1.08-.53l2.6-2.52 5.1 3.75c.94.52 1.61.25 1.84-.87l3.33-15.69c.34-1.36-.52-1.97-1.58-1.22z" fill="currentColor"/>
+            </svg>
+          </div>
+          <span className="detail-contact-icon__label">Telegram</span>
         </button>
+
         {import.meta.env.VITE_OWNER_WHATSAPP && (
-          <button
-            className="detail-contact-btn"
-            onClick={() => window.open(`https://wa.me/${import.meta.env.VITE_OWNER_WHATSAPP}`)}
-          >
-            Написать в WhatsApp
+          <button className="detail-contact-icon" onClick={() =>
+            window.open(`https://wa.me/${import.meta.env.VITE_OWNER_WHATSAPP}`)
+          }>
+            <div className="detail-contact-icon__circle">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.37 5.07L2 22l5.1-1.34A9.94 9.94 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm5.07 14.07c-.22.62-1.28 1.18-1.76 1.25-.45.07-1.02.1-1.64-.1-.38-.12-.86-.28-1.48-.55-2.6-1.12-4.3-3.74-4.43-3.91-.13-.17-1.07-1.42-1.07-2.71 0-1.29.68-1.92.92-2.18.24-.26.52-.33.7-.33.17 0 .35 0 .5.01.17.01.39-.06.61.47.22.53.76 1.85.83 1.98.07.13.11.29.02.46-.09.17-.13.28-.26.43-.13.15-.27.34-.39.45-.13.12-.26.25-.11.49.15.24.66 1.09 1.42 1.76.97.87 1.79 1.14 2.04 1.27.25.13.39.11.54-.07.15-.18.62-.72.79-.97.17-.25.33-.21.56-.13.22.08 1.42.67 1.66.79.24.12.4.18.46.28.06.1.06.58-.16 1.2z" fill="currentColor"/>
+              </svg>
+            </div>
+            <span className="detail-contact-icon__label">WhatsApp</span>
           </button>
         )}
+
         {import.meta.env.VITE_OWNER_PHONE && (
-          <button
-            className="detail-contact-btn"
-            onClick={() => window.open(`tel:${import.meta.env.VITE_OWNER_PHONE}`)}
-          >
-            Позвонить
+          <button className="detail-contact-icon" onClick={() =>
+            window.open(`tel:${import.meta.env.VITE_OWNER_PHONE}`)
+          }>
+            <div className="detail-contact-icon__circle">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                <path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" fill="currentColor"/>
+              </svg>
+            </div>
+            <span className="detail-contact-icon__label">Позвонить</span>
           </button>
         )}
       </div>
