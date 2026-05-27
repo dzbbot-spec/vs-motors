@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { api } from '../api/client'
+import BrandModelSelect from './BrandModelSelect'
+import { CAR_DATABASE, type CarModel } from '../data/cars'
 
 export interface ListingFormData {
   brand: string
@@ -50,6 +52,56 @@ const defaultForm: ListingFormData = {
   description: '',
 }
 
+// Инициализируем spec по уже известным марке/модели (для режима редактирования)
+function findSpec(brand: string, model: string): CarModel | null {
+  const b = CAR_DATABASE.find(bi => bi.name.toLowerCase() === brand.toLowerCase())
+  if (!b) return null
+  return b.models.find(mi => mi.name.toLowerCase() === model.toLowerCase()) ?? null
+}
+
+// Предупреждения по году
+function getYearWarnings(spec: CarModel | null, year: string): string[] {
+  if (!spec || !year) return []
+  const yr = parseInt(year)
+  if (isNaN(yr)) return []
+  if (yr < spec.years[0] || yr > spec.years[1]) {
+    return [`Год вне диапазона производства (${spec.years[0]}–${spec.years[1]})`]
+  }
+  return []
+}
+
+// Предупреждения по КПП и топливу
+function getStep1Warnings(spec: CarModel | null, form: ListingFormData): string[] {
+  if (!spec) return []
+  const w: string[] = []
+  if (form.fuel_type && !spec.fuel.includes(form.fuel_type)) {
+    w.push('Нетипичный тип топлива для этой модели')
+  }
+  if (form.transmission && !spec.transmission.includes(form.transmission)) {
+    w.push('Нетипичная КПП для этой модели')
+  }
+  return w
+}
+
+// Предупреждения по двигателю и мощности
+function getStep2Warnings(spec: CarModel | null, form: ListingFormData): string[] {
+  if (!spec) return []
+  const w: string[] = []
+  if (form.engine_volume) {
+    const vol = parseFloat(form.engine_volume)
+    if (!isNaN(vol) && !spec.engines.includes(vol)) {
+      w.push(`Нетипичный объём двигателя. Стандартные: ${spec.engines.join(', ')} л`)
+    }
+  }
+  if (form.power_hp) {
+    const hp = parseInt(form.power_hp)
+    if (!isNaN(hp) && (hp < spec.power[0] || hp > spec.power[1])) {
+      w.push(`Мощность вне диапазона для этой модели (${spec.power[0]}–${spec.power[1]} л.с.)`)
+    }
+  }
+  return w
+}
+
 export default function ListingForm({
   initial = {},
   initialPhotos = [],
@@ -64,6 +116,9 @@ export default function ListingForm({
     initialPhotos.map(url => ({ url, uploading: false }))
   )
   const [errors, setErrors] = useState<Partial<Record<keyof ListingFormData, string>>>({})
+  const [carSpec, setCarSpec] = useState<CarModel | null>(() =>
+    findSpec(initial.brand ?? '', initial.model ?? '')
+  )
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   // Прогрев бэкенда при переходе на последний шаг
@@ -78,6 +133,18 @@ export default function ListingForm({
   ) => {
     setForm(f => ({ ...f, [field]: e.target.value }))
     setErrors(err => ({ ...err, [field]: undefined }))
+  }
+
+  const handleBrandChange = (brand: string) => {
+    setForm(f => ({ ...f, brand, model: '' }))
+    setCarSpec(null)
+    setErrors(err => ({ ...err, brand: undefined, model: undefined }))
+  }
+
+  const handleModelChange = (model: string, spec?: CarModel) => {
+    setForm(f => ({ ...f, model }))
+    setCarSpec(spec ?? null)
+    setErrors(err => ({ ...err, model: undefined }))
   }
 
   const validateStep = (): boolean => {
@@ -157,6 +224,14 @@ export default function ListingForm({
     await onSubmit(form, urls)
   }
 
+  // Фильтруем КПП и топливо по выбранной модели
+  const availableTransmissions = carSpec
+    ? TRANSMISSIONS.filter(([v]) => carSpec.transmission.includes(v))
+    : TRANSMISSIONS
+  const availableFuels = carSpec
+    ? FUELS.filter(([v]) => carSpec.fuel.includes(v))
+    : FUELS
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
       {/* Progress bar */}
@@ -169,13 +244,13 @@ export default function ListingForm({
       {step === 0 && (
         <div className="form-step">
           <div className="field">
-            <label>Марка *</label>
-            <input value={form.brand} onChange={set('brand')} placeholder="Toyota, BMW, Mercedes..." />
+            <BrandModelSelect
+              brand={form.brand}
+              model={form.model}
+              onBrandChange={handleBrandChange}
+              onModelChange={handleModelChange}
+            />
             {errors.brand && <span style={{ color: 'var(--danger)', fontSize: 12 }}>{errors.brand}</span>}
-          </div>
-          <div className="field">
-            <label>Модель *</label>
-            <input value={form.model} onChange={set('model')} placeholder="Camry, X5, E-Class..." />
             {errors.model && <span style={{ color: 'var(--danger)', fontSize: 12 }}>{errors.model}</span>}
           </div>
           <div className="field-row">
@@ -212,6 +287,13 @@ export default function ListingForm({
             />
             {errors.price && <span style={{ color: 'var(--danger)', fontSize: 12 }}>{errors.price}</span>}
           </div>
+          {getYearWarnings(carSpec, form.year).length > 0 && (
+            <div className="spec-warnings">
+              {getYearWarnings(carSpec, form.year).map((w, i) => (
+                <p key={i} className="spec-warning">{w}</p>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
@@ -232,14 +314,14 @@ export default function ListingForm({
             <label>Коробка передач</label>
             <select value={form.transmission} onChange={set('transmission')}>
               <option value="">Не указано</option>
-              {TRANSMISSIONS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+              {availableTransmissions.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
             </select>
           </div>
           <div className="field">
             <label>Тип топлива</label>
             <select value={form.fuel_type} onChange={set('fuel_type')}>
               <option value="">Не указано</option>
-              {FUELS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+              {availableFuels.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
             </select>
           </div>
           <div className="field">
@@ -253,6 +335,13 @@ export default function ListingForm({
             <label>Цвет</label>
             <input value={form.color} onChange={set('color')} placeholder="Белый, чёрный..." />
           </div>
+          {getStep1Warnings(carSpec, form).length > 0 && (
+            <div className="spec-warnings">
+              {getStep1Warnings(carSpec, form).map((w, i) => (
+                <p key={i} className="spec-warning">{w}</p>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
@@ -300,6 +389,13 @@ export default function ListingForm({
             <label>Страна происхождения</label>
             <input value={form.country} onChange={set('country')} placeholder="Германия, Япония..." />
           </div>
+          {getStep2Warnings(carSpec, form).length > 0 && (
+            <div className="spec-warnings">
+              {getStep2Warnings(carSpec, form).map((w, i) => (
+                <p key={i} className="spec-warning">{w}</p>
+              ))}
+            </div>
+          )}
         </div>
       )}
 

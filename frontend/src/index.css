@@ -444,6 +444,21 @@ input, select, textarea { font: inherit; color: inherit; }
 }
 .btn-contact:active { opacity: 0.6; }
 
+/* ── Предупреждения валидации ── */
+.spec-warnings {
+  background: #fff8e1;
+  border-radius: 10px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.spec-warning {
+  font-size: 13px;
+  color: #b45309;
+  line-height: 1.4;
+}
+
 /* ── Form ── */
 .progress-bar {
   height: 3px;

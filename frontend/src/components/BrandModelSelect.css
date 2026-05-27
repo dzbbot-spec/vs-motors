@@ -1,0 +1,77 @@
+.bms-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bms-field {
+  position: relative;
+}
+
+.bms-label {
+  display: block;
+  font-size: 13px;
+  color: var(--hint, #999);
+  margin-bottom: 4px;
+}
+
+.bms-input {
+  width: 100%;
+  background: var(--bg-secondary, #f5f5f5);
+  border: none;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 15px;
+  color: var(--text, #000);
+  font-family: inherit;
+  outline: none;
+  box-sizing: border-box;
+}
+.bms-input:focus {
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.15);
+}
+.bms-input--disabled {
+  opacity: 0.4;
+}
+
+.bms-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.06);
+  z-index: 100;
+  overflow: hidden;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.bms-option {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  padding: 12px 14px;
+  border: none;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+}
+.bms-option:last-child { border-bottom: none; }
+.bms-option:active { background: var(--bg-secondary, #f5f5f5); }
+
+.bms-option__name {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text, #000);
+}
+
+.bms-option__hint {
+  font-size: 12px;
+  color: var(--hint, #999);
+  margin-top: 2px;
+}
