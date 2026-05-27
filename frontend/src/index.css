@@ -250,74 +250,114 @@ input, select, textarea { font: inherit; color: inherit; }
 
 /* ── Detail Page ── */
 .detail-title {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 700;
-  padding: 16px 12px 4px;
+  color: var(--text);
+  padding: 16px 16px 4px;
+  line-height: 1.2;
 }
 
 .detail-price {
-  font-size: 24px;
-  font-weight: 700;
-  padding: 0 12px 8px;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--text);
+  padding: 0 16px 12px;
+  letter-spacing: -0.5px;
 }
 
+/* Pill-статус под ценой */
 .detail-status {
-  padding: 0 12px 12px;
-  border-bottom: 1px solid var(--divider);
+  display: inline-block;
+  padding: 5px 14px;
+  border-radius: var(--radius-pill);
+  font-size: 13px;
+  font-weight: 500;
+  margin: 0 16px 16px;
 }
 
-/* ── Contact Actions ── */
-.contact-actions {
-  padding: 12px;
+.detail-status--active {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.detail-status--sold {
+  background: var(--bg-secondary);
+  color: var(--hint);
+}
+
+/* Стопка кнопок контактов */
+.detail-contacts {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  border-bottom: 1px solid var(--divider);
+  gap: 10px;
+  padding: 0 16px 20px;
 }
 
-/* ── Specs ── */
-.specs-section {
-  border-top: 1px solid var(--divider);
+.detail-contact-btn {
+  display: block;
+  width: 100%;
+  padding: 15px 16px;
+  border-radius: var(--radius-pill);
+  background: var(--bg);
+  border: none;
+  box-shadow: var(--shadow-btn);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  text-align: center;
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.1s ease;
+  font-family: inherit;
 }
 
-.specs-title {
+.detail-contact-btn:active {
+  opacity: 0.7;
+  transform: scale(0.98);
+}
+
+/* Заголовок секций */
+.detail-specs-title {
   font-size: 13px;
+  font-weight: 500;
   color: var(--hint);
-  padding: 10px 12px 4px;
+  padding: 0 16px 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.specs-grid {
+/* Сетка характеристик — shadow-блоки */
+.detail-specs-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  border-top: 1px solid var(--divider);
+  gap: 10px;
+  padding: 0 16px 20px;
 }
 
-.spec-item {
-  padding: 10px 12px;
-  border-bottom: 1px solid var(--divider);
+.detail-spec-block {
+  background: var(--bg);
+  border-radius: var(--radius-block);
+  box-shadow: var(--shadow-btn);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
-.spec-item__label {
-  font-size: 13px;
+.detail-spec-label {
+  font-size: 12px;
   color: var(--hint);
-  margin-bottom: 2px;
+  font-weight: 400;
 }
 
-.spec-item__value {
-  font-weight: 500;
-  font-size: 14px;
+.detail-spec-value {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
 }
 
-/* ── VIN ── */
-.vin-section {
-  border-top: 1px solid var(--divider);
-  padding: 10px 12px 14px;
-}
-
-/* ── Description ── */
+/* Описание */
 .desc-section {
-  border-top: 1px solid var(--divider);
-  padding: 12px;
+  padding: 0 16px 20px;
 }
 
 .desc-text {
@@ -335,15 +375,39 @@ input, select, textarea { font: inherit; color: inherit; }
   color: var(--button);
 }
 
-/* ── Owner Actions ── */
-.owner-actions {
+/* Кнопки владельца — ряд pill-кнопок */
+.detail-owner-actions {
   display: flex;
-  gap: 10px;
-  padding: 16px;
-  border-top: 1px solid var(--divider);
+  gap: 8px;
+  padding: 0 16px 32px;
 }
 
-/* ── Status Badge ── */
+.detail-owner-btn {
+  flex: 1;
+  padding: 13px 8px;
+  border-radius: var(--radius-pill);
+  background: var(--bg);
+  border: none;
+  box-shadow: var(--shadow-btn);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+  text-align: center;
+  font-family: inherit;
+}
+
+.detail-owner-btn:active { opacity: 0.6; }
+.detail-owner-btn:disabled { opacity: 0.4; cursor: default; }
+
+.detail-owner-btn--danger {
+  color: #ff3b30;
+  flex: 0 0 48px;
+  font-size: 18px;
+}
+
+/* Status Badge (используется в AdminPage) */
 .status-badge {
   display: inline-block;
   font-size: 12px;
@@ -366,31 +430,19 @@ input, select, textarea { font: inherit; color: inherit; }
 .btn-contact {
   display: block;
   width: 100%;
-  padding: 13px 16px;
-  background: transparent;
-  border: 1.5px solid var(--border);
+  padding: 6px 16px;
+  background: #fff;
+  border: none;
   border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.10), 0 0 0 1px rgba(0,0,0,0.06);
   font-size: 15px;
-  font-weight: 500;
-  font-family: inherit;
+  font-weight: 400;
   color: var(--text);
   text-align: center;
   cursor: pointer;
   transition: opacity 0.15s ease;
 }
-
 .btn-contact:active { opacity: 0.6; }
-
-/* ── Квадратная кнопка-иконка (удалить) ── */
-.icon-btn {
-  width: 44px;
-  height: 44px;
-  flex-shrink: 0;
-  border-radius: var(--radius-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
 /* ── Form ── */
 .progress-bar {

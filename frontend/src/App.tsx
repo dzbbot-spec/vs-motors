@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom'
 import { ready, expand, getStartParam } from './lib/telegram'
 import { useTelegram } from './hooks/useTelegram'
+import { warmupBackend } from './utils/warmup'
 import HomePage from './pages/HomePage'
 import ListingDetailPage from './pages/ListingDetailPage'
 import AddListingPage from './pages/AddListingPage'
@@ -35,8 +36,11 @@ export default function App() {
   useEffect(() => {
     ready()
     expand()
-    // Прогрев бэкенда при запуске приложения
-    fetch('/health').catch(() => { /* silent */ })
+    // Первый прогрев сразу при старте
+    warmupBackend()
+    // Повторный пинг каждые 10 минут пока приложение открыто
+    const interval = setInterval(warmupBackend, 10 * 60 * 1000)
+    return () => clearInterval(interval)
   }, [])
 
   return (

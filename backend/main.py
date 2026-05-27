@@ -54,31 +54,6 @@ async def telegram_webhook(request: Request):
     return Response()
 
 
-@app.post("/debug/verify")
-async def debug_verify(request: Request):
-    """Временный эндпоинт для диагностики initData. Удалить после фикса."""
-    import hmac as _hmac, hashlib as _hl
-    from urllib.parse import parse_qsl as _pqs
-    body = await request.json()
-    init_data: str = body.get("init_data", "")
-    try:
-        params = dict(_pqs(init_data, strict_parsing=False))
-        received_hash = params.pop("hash", None)
-        params.pop("signature", None)
-        data_check = "\n".join(f"{k}={v}" for k, v in sorted(params.items()))
-        secret = _hmac.new(b"WebAppData", settings.BOT_TOKEN.encode(), _hl.sha256).digest()
-        computed = _hmac.new(secret, data_check.encode(), _hl.sha256).hexdigest()
-        return {
-            "match": computed == received_hash,
-            "received_hash": received_hash,
-            "computed_hash": computed,
-            "params_keys": list(params.keys()),
-            "bot_token_first10": settings.BOT_TOKEN[:10],
-            "data_check_snippet": data_check[:200],
-        }
-    except Exception as e:
-        return {"error": str(e), "init_data_len": len(init_data)}
-
 
 @app.get("/health")
 async def health():
