@@ -18,7 +18,8 @@ router = APIRouter(prefix="/api", dependencies=[Depends(require_owner)])
 FULL = """id, created_at, updated_at, brand, model, year, price, currency,
     mileage, transmission, fuel_type, body_type, color, engine_volume,
     power_hp, drive_type, vin, country, description, status, photos,
-    owners_count, has_accidents, pts_original, service_history, customs_cleared"""
+    owners_count, has_accidents, pts_original, service_history, customs_cleared,
+    views"""
 
 ALLOWED_MIME = {"image/jpeg", "image/png", "image/webp", "image/heic"}
 
@@ -80,7 +81,7 @@ async def admin_listings():
     async with database.pool.acquire() as conn:
         rows = await conn.fetch(
             """SELECT id, created_at, brand, model, year, price, currency,
-                mileage, transmission, fuel_type, status, photos
+                mileage, transmission, fuel_type, status, photos, views
                FROM listings ORDER BY created_at DESC"""
         )
     return [ListingShort(**dict(r)) for r in rows]

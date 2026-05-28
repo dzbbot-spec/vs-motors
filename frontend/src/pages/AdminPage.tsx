@@ -93,6 +93,8 @@ export default function AdminPage() {
                   {item.price.toLocaleString('ru-RU')} {item.currency}
                   {' · '}
                   {item.status === 'active' ? 'В продаже' : 'Продано'}
+                  {' · '}
+                  <span className="admin-views">{item.views || 0} просм.</span>
                 </div>
               </div>
 

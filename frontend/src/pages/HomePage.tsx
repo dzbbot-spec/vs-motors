@@ -8,6 +8,14 @@ import BottomNav from '../components/BottomNav'
 
 const LAYOUT_KEY = 'vs_layout'
 
+const SORT_OPTIONS = [
+  { key: 'date_desc', label: 'Сначала новые' },
+  { key: 'date_asc', label: 'Сначала старые' },
+  { key: 'price_asc', label: 'Дешевле' },
+  { key: 'price_desc', label: 'Дороже' },
+  { key: 'mileage_asc', label: 'Меньше пробег' },
+]
+
 function IconList() {
   return (
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
@@ -29,8 +37,18 @@ function IconGrid() {
   )
 }
 
+function IconSort() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+      <path d="M2 4h14M4 9h10M6 14h6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+    </svg>
+  )
+}
+
 export default function HomePage() {
-  const { items, loading, initialLoading, hasNext, error, loadMore } = useListings()
+  const [sort, setSort] = useState('date_desc')
+  const [showSort, setShowSort] = useState(false)
+  const { items, loading, initialLoading, hasNext, error, loadMore } = useListings(sort)
   const { isOwner } = useTelegram()
   const nav = useNavigate()
   const sentinelRef = useRef<HTMLDivElement>(null)
@@ -45,7 +63,6 @@ export default function HomePage() {
     localStorage.setItem(LAYOUT_KEY, value)
   }
 
-  // layout карточки: список → горизонтальная, плитка → вертикальная
   const cardLayout = layout === 'grid' ? 'vertical' : 'horizontal'
   const containerClass = layout === 'grid' ? 'home-content--grid' : 'home-content--list'
 
@@ -66,17 +83,28 @@ export default function HomePage() {
     return () => obs.disconnect()
   }, [handleObserver])
 
+  const currentSortLabel = SORT_OPTIONS.find(o => o.key === sort)?.label ?? 'Сортировка'
+
   return (
     <div className="page">
       <div className="home-header">
         <div className="home-header__title">VS MOTORS</div>
-        <button
-          className="layout-btn active"
-          onClick={() => toggleLayout(layout === 'list' ? 'grid' : 'list')}
-          aria-label={layout === 'list' ? 'Переключить в плитку' : 'Переключить в список'}
-        >
-          {layout === 'list' ? <IconGrid /> : <IconList />}
-        </button>
+        <div className="home-header__right">
+          <button
+            className={`layout-btn${sort !== 'date_desc' ? ' active' : ''}`}
+            onClick={() => setShowSort(true)}
+            aria-label="Сортировка"
+          >
+            <IconSort />
+          </button>
+          <button
+            className="layout-btn active"
+            onClick={() => toggleLayout(layout === 'list' ? 'grid' : 'list')}
+            aria-label={layout === 'list' ? 'Переключить в плитку' : 'Переключить в список'}
+          >
+            {layout === 'list' ? <IconGrid /> : <IconList />}
+          </button>
+        </div>
       </div>
 
       {/* Кнопка связи — под шапкой, до списка */}
@@ -118,6 +146,26 @@ export default function HomePage() {
         <button className="fab" onClick={() => nav('/add')} aria-label="Добавить объявление">
           +
         </button>
+      )}
+
+      {/* Сортировка — bottom sheet */}
+      {showSort && (
+        <>
+          <div className="sort-backdrop" onClick={() => setShowSort(false)} />
+          <div className="sort-sheet">
+            <div className="sort-handle" />
+            {SORT_OPTIONS.map(opt => (
+              <button
+                key={opt.key}
+                className={`sort-option${sort === opt.key ? ' sort-option--active' : ''}`}
+                onClick={() => { setSort(opt.key); setShowSort(false) }}
+              >
+                <span>{opt.label}</span>
+                {sort === opt.key && <span className="sort-check">✓</span>}
+              </button>
+            ))}
+          </div>
+        </>
       )}
 
       <BottomNav />

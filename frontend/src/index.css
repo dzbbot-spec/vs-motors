@@ -53,6 +53,47 @@ input, select, textarea { font: inherit; color: inherit; }
   font-weight: 700;
 }
 
+/* ── Анимация появления снизу ── */
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+/* ── Sort bottom sheet ── */
+.sort-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 300;
+}
+.sort-sheet {
+  position: fixed; left: 0; right: 0; bottom: 0;
+  background: var(--bg);
+  border-radius: 16px 16px 0 0;
+  padding: 12px 0 env(safe-area-inset-bottom, 16px);
+  z-index: 301;
+  animation: slideUp 0.28s cubic-bezier(0.32,0.72,0,1);
+  max-width: 480px;
+  margin: 0 auto;
+}
+.sort-handle {
+  width: 36px; height: 4px;
+  border-radius: 2px;
+  background: var(--divider);
+  margin: 0 auto 12px;
+}
+.sort-option {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  width: 100%; padding: 14px 20px;
+  font-size: 15px; color: var(--text);
+  background: none; border: none;
+  font-family: inherit; text-align: left;
+  cursor: pointer;
+}
+.sort-option:active { background: var(--bg-secondary); }
+.sort-option--active { color: var(--button); font-weight: 600; }
+.sort-check { font-size: 15px; font-weight: 700; color: var(--button); }
+
 /* ── Home Header ── */
 .home-header {
   padding: 12px 12px 8px;
@@ -727,6 +768,11 @@ input, select, textarea { font: inherit; color: inherit; }
   font-size: 13px;
   color: var(--hint);
   margin-top: 2px;
+}
+
+.admin-views {
+  font-size: 12px;
+  color: var(--hint);
 }
 
 .admin-row__actions {

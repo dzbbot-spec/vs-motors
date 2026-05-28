@@ -24,6 +24,7 @@ export default function ListingDetailPage() {
   const [error, setError] = useState<string | null>(null)
   const [deleting, setDeleting] = useState(false)
   const [toggling, setToggling] = useState(false)
+  const [shareCopied, setShareCopied] = useState(false)
 
   /* Dot-пагинация галереи */
   const trackRef = useRef<HTMLDivElement>(null)
@@ -78,6 +79,25 @@ export default function ListingDetailPage() {
     }
   }
 
+  const handleShare = () => {
+    const botUsername = import.meta.env.VITE_BOT_USERNAME
+    const url = `https://t.me/${botUsername}?startapp=listing_${listing?.id}`
+    if (navigator.share) {
+      navigator.share({
+        title: `${listing?.brand} ${listing?.model} ${listing?.year}`,
+        text: `${listing?.price.toLocaleString()} ${listing?.currency}`,
+        url,
+      }).catch(() => {})
+    } else {
+      navigator.clipboard?.writeText(url).then(() => {
+        setShareCopied(true)
+        setTimeout(() => setShareCopied(false), 2000)
+      }).catch(() => {
+        window.open(url)
+      })
+    }
+  }
+
   const handleToggleStatus = async () => {
     const newStatus = listing.status === 'active' ? 'sold' : 'active'
     const label = newStatus === 'sold' ? 'Отметить как "Продано"?' : 'Вернуть в продажу?'
@@ -126,11 +146,27 @@ export default function ListingDetailPage() {
 
       {/* Заголовок, цена, статус */}
       <div className="detail-card">
-        <h1 className="detail-title">{listing.brand} {listing.model} {listing.year}</h1>
+        <div className="detail-title-row">
+          <h1 className="detail-title">{listing.brand} {listing.model} {listing.year}</h1>
+          <button className="detail-share-btn" onClick={handleShare}>
+            {shareCopied ? (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                <path d="M20 6L9 17l-5-5"/>
+              </svg>
+            ) : (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13"/>
+              </svg>
+            )}
+          </button>
+        </div>
         <p className="detail-price">{listing.price.toLocaleString()} {listing.currency}</p>
         <span className={`detail-status detail-status--${listing.status}`}>
           {listing.status === 'active' ? 'В продаже' : 'Продано'}
         </span>
+        {(listing.views ?? 0) > 0 && (
+          <p className="detail-views">{listing.views} просмотров</p>
+        )}
       </div>
 
       {/* Кнопки контактов — круглые иконки в ряд */}

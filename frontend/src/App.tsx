@@ -8,6 +8,7 @@ import ListingDetailPage from './pages/ListingDetailPage'
 import AddListingPage from './pages/AddListingPage'
 import EditListingPage from './pages/EditListingPage'
 import AdminPage from './pages/AdminPage'
+import AboutPage from './pages/AboutPage'
 
 function DeepLinkHandler() {
   const nav = useNavigate()
@@ -51,6 +52,7 @@ export default function App() {
         <Route path="/listing/:id" element={<ListingDetailPage />} />
         <Route path="/add" element={<OwnerRoute><AddListingPage /></OwnerRoute>} />
         <Route path="/listing/:id/edit" element={<OwnerRoute><EditListingPage /></OwnerRoute>} />
+        <Route path="/about" element={<AboutPage />} />
         <Route path="/admin" element={<OwnerRoute><AdminPage /></OwnerRoute>} />
       </Routes>
     </BrowserRouter>

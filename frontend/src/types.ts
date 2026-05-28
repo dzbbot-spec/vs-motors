@@ -11,6 +11,7 @@ export interface Listing {
   fuel_type: string | null
   status: 'active' | 'sold'
   photos: string[]
+  views?: number
 }
 
 export interface ListingFull extends Listing {

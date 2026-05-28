@@ -17,6 +17,7 @@ class ListingShort(BaseModel):
     fuel_type: str | None
     status: str
     photos: list[str]
+    views: int = 0
 
 
 class ListingFull(ListingShort):

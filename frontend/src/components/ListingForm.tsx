@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { api } from '../api/client'
+import { compressImage } from '../utils/compressImage'
 import BrandModelSelect from './BrandModelSelect'
 import { CAR_DATABASE, type CarModel } from '../data/cars'
 
@@ -197,8 +198,9 @@ export default function ListingForm({
     await Promise.all(fileArr.map(async (file, i) => {
       const localUrl = newEntries[i].url
       try {
+        const compressed = await compressImage(file)
         const fd = new FormData()
-        fd.append('file', file)
+        fd.append('file', compressed)
         fd.append('api_key', sigData.api_key)
         fd.append('timestamp', String(sigData.timestamp))
         fd.append('signature', sigData.signature)
