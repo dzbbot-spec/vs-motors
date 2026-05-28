@@ -51,14 +51,17 @@ async def get_listings(
 @router.get("/listings/{listing_id}", response_model=ListingFull)
 async def get_listing(listing_id: UUID):
     async with database.pool.acquire() as conn:
-        # Атомарно увеличиваем счётчик и возвращаем обновлённую запись
         row = await conn.fetchrow(
-            f"""UPDATE listings
-                SET views = COALESCE(views, 0) + 1
-                WHERE id = $1
-                RETURNING {FULL}""",
-            listing_id,
+            f"SELECT {FULL} FROM listings WHERE id = $1", listing_id
         )
-    if not row:
-        raise HTTPException(status_code=404, detail="Объявление не найдено")
+        if not row:
+            raise HTTPException(status_code=404, detail="Объявление не найдено")
+        # Счётчик не критичен — падение не роняет весь запрос
+        try:
+            await conn.execute(
+                "UPDATE listings SET views = COALESCE(views, 0) + 1 WHERE id = $1",
+                listing_id,
+            )
+        except Exception:
+            pass
     return ListingFull(**dict(row))
