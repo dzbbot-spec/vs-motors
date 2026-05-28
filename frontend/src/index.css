@@ -68,7 +68,7 @@ input, select, textarea { font: inherit; color: inherit; }
 .sort-sheet {
   position: fixed; left: 0; right: 0; bottom: 0;
   background: var(--bg);
-  border-radius: 16px 16px 0 0;
+  border-radius: 20px 20px 0 0;
   padding: 12px 0 env(safe-area-inset-bottom, 16px);
   z-index: 301;
   animation: slideUp 0.28s cubic-bezier(0.32,0.72,0,1);
@@ -96,16 +96,18 @@ input, select, textarea { font: inherit; color: inherit; }
 
 /* ── Home Header ── */
 .home-header {
-  padding: 12px 12px 8px;
+  padding: 14px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  background: #FFFFFF;
+  border-bottom: 1px solid #E2E8F0;
 }
 
 .home-header__title {
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
 }
 
 .home-header__right {
@@ -147,14 +149,14 @@ input, select, textarea { font: inherit; color: inherit; }
   border-radius: var(--radius);
   overflow: hidden;
   background: var(--bg);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+  box-shadow: var(--shadow-card);
   cursor: pointer;
 }
 
 .car-card--sold { opacity: 0.55; }
 
 .car-card__photo {
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 4 / 3;
   background: var(--bg-secondary);
   overflow: hidden;
 }
@@ -170,14 +172,14 @@ input, select, textarea { font: inherit; color: inherit; }
 }
 
 .car-card__title {
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 700;
 }
 
 .car-card__meta {
-  font-size: 13px;
+  font-size: 12px;
   color: var(--hint);
-  margin-top: 4px;
+  margin-top: 3px;
 }
 
 .car-card__footer {
@@ -188,8 +190,8 @@ input, select, textarea { font: inherit; color: inherit; }
 }
 
 .car-card__price {
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 15px;
+  font-weight: 800;
 }
 
 .car-card__badge {
@@ -207,10 +209,9 @@ input, select, textarea { font: inherit; color: inherit; }
 }
 
 .car-card--horizontal .car-card__photo {
-  width: 38%;
+  width: 40%;
   flex-shrink: 0;
-  aspect-ratio: auto;
-  min-height: 110px;
+  aspect-ratio: 4 / 3;
 }
 
 .car-card--horizontal .car-card__body {
@@ -222,12 +223,19 @@ input, select, textarea { font: inherit; color: inherit; }
   min-width: 0;
 }
 
-.car-card--horizontal .car-card__price {
-  font-size: 16px;
+.car-card--horizontal .car-card__title {
+  font-size: 15px;
+  font-weight: 700;
 }
 
 .car-card--horizontal .car-card__meta {
   font-size: 12px;
+  margin-top: 3px;
+}
+
+.car-card--horizontal .car-card__price {
+  font-size: 17px;
+  font-weight: 800;
 }
 
 /* ── Gallery ── */
@@ -300,7 +308,7 @@ input, select, textarea { font: inherit; color: inherit; }
 }
 
 .detail-price {
-  font-size: 28px;
+  font-size: 30px;
   font-weight: 800;
   color: var(--text);
   padding: 0 16px 12px;
@@ -318,8 +326,8 @@ input, select, textarea { font: inherit; color: inherit; }
 }
 
 .detail-status--active {
-  background: #e8f5e9;
-  color: #2e7d32;
+  background: #DCFCE7;
+  color: #16A34A;
 }
 
 .detail-status--sold {
@@ -353,11 +361,11 @@ input, select, textarea { font: inherit; color: inherit; }
 }
 
 .detail-contact-icon__circle {
-  width: 56px;
-  height: 56px;
+  width: 58px;
+  height: 58px;
   border-radius: 50%;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.10), 0 0 0 1px rgba(0,0,0,0.06);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.06);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -392,9 +400,9 @@ input, select, textarea { font: inherit; color: inherit; }
 
 .detail-spec-block {
   background: var(--bg);
-  border-radius: var(--radius-block);
-  box-shadow: var(--shadow-btn);
-  padding: 14px;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 0 0 1px #E2E8F0;
+  padding: 14px 16px;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -442,11 +450,11 @@ input, select, textarea { font: inherit; color: inherit; }
 .detail-owner-btn {
   flex: 1;
   padding: 13px 8px;
-  border-radius: var(--radius-pill);
+  border-radius: 12px;
   background: var(--bg);
   border: none;
   box-shadow: var(--shadow-btn);
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   color: var(--text);
   cursor: pointer;
@@ -459,7 +467,7 @@ input, select, textarea { font: inherit; color: inherit; }
 .detail-owner-btn:disabled { opacity: 0.4; cursor: default; }
 
 .detail-owner-btn--danger {
-  color: #ff3b30;
+  color: var(--danger);
   flex: 0 0 48px;
   font-size: 18px;
 }
@@ -475,8 +483,8 @@ input, select, textarea { font: inherit; color: inherit; }
 }
 
 .status-badge--active {
-  color: #065f46;
-  background: #d1fae5;
+  color: #16A34A;
+  background: #DCFCE7;
 }
 
 /* ── Кнопка связаться на HomePage ── */
@@ -487,14 +495,14 @@ input, select, textarea { font: inherit; color: inherit; }
 .btn-contact {
   display: block;
   width: 100%;
-  padding: 6px 16px;
-  background: #fff;
+  padding: 13px 16px;
+  background: #2563EB;
   border: none;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.14), 0 0 0 1px rgba(0,0,0,0.07);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.25);
   font-size: 15px;
-  font-weight: 400;
-  color: var(--text);
+  font-weight: 600;
+  color: #FFFFFF;
   text-align: center;
   cursor: pointer;
   transition: opacity 0.15s ease;
@@ -629,9 +637,9 @@ input, select, textarea { font: inherit; color: inherit; }
 .field textarea {
   width: 100%;
   padding: 12px;
-  background: var(--bg-secondary);
-  border: none;
-  border-radius: var(--radius-sm);
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
   font-size: 15px;
   outline: none;
   appearance: none;
@@ -641,7 +649,9 @@ input, select, textarea { font: inherit; color: inherit; }
 .field input:focus,
 .field select:focus,
 .field textarea:focus {
-  outline: 2px solid var(--button);
+  border-color: #2563EB;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
 }
 
 .field textarea {
@@ -804,7 +814,8 @@ input, select, textarea { font: inherit; color: inherit; }
   max-width: 480px;
   height: calc(62px + env(safe-area-inset-bottom, 0px));
   padding-bottom: env(safe-area-inset-bottom, 0px);
-  background: var(--bg);
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(12px);
   border-top: 1px solid var(--divider);
   display: flex;
   z-index: 100;
@@ -838,7 +849,7 @@ input, select, textarea { font: inherit; color: inherit; }
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 20px rgba(37,99,235,0.4);
   z-index: 99;
 }
 
@@ -852,7 +863,7 @@ input, select, textarea { font: inherit; color: inherit; }
 
 .skeleton-box,
 .skeleton-line {
-  background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--bg) 50%, var(--bg-secondary) 75%);
+  background: linear-gradient(90deg, #F8FAFC 25%, #FFFFFF 50%, #F8FAFC 75%);
   background-size: 600px 100%;
   animation: shimmer 1.4s infinite;
   border-radius: 6px;

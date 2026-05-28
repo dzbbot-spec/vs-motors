@@ -105,7 +105,7 @@
 }
 
 .detail-price {
-  font-size: 26px;
+  font-size: 30px;
   font-weight: 800;
   color: var(--text, #000);
   letter-spacing: -0.5px;
@@ -120,12 +120,12 @@
   font-weight: 500;
 }
 .detail-status--active {
-  background: #e8f5e9;
-  color: #2e7d32;
+  background: #DCFCE7;
+  color: #16A34A;
 }
 .detail-status--sold {
-  background: #f0f0f0;
-  color: #888;
+  background: var(--bg-secondary);
+  color: var(--hint);
 }
 
 /* ── Кнопки контактов ── */
@@ -207,8 +207,8 @@
 }
 
 .history-badge--ok {
-  background: #e8f5e9;
-  color: #2e7d32;
+  background: #DCFCE7;
+  color: #16A34A;
 }
 
 .history-badge--warn {
@@ -225,9 +225,9 @@
 
 .detail-spec-block {
   background: #fff;
-  border-radius: 14px;
-  padding: 14px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 0 0 1px #E2E8F0;
 }
 
 .detail-spec-label {
@@ -264,11 +264,11 @@
 .detail-owner-btn {
   flex: 1;
   padding: 14px 8px;
-  border-radius: 50px;
+  border-radius: 12px;
   background: #fff;
   border: none;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.10), 0 0 0 1px rgba(0,0,0,0.06);
-  font-size: 14px;
+  box-shadow: var(--shadow-btn);
+  font-size: 15px;
   font-weight: 600;
   color: var(--text, #000);
   cursor: pointer;
@@ -277,4 +277,4 @@
   transition: opacity 0.15s ease;
 }
 .detail-owner-btn:active { opacity: 0.6; }
-.detail-owner-btn--danger { color: #ff3b30; }
+.detail-owner-btn--danger { color: var(--danger); }
