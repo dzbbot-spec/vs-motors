@@ -23,6 +23,11 @@ export interface ListingFull extends Listing {
   vin: string | null
   country: string | null
   description: string | null
+  owners_count: number | null
+  has_accidents: boolean | null
+  pts_original: boolean | null
+  service_history: boolean | null
+  customs_cleared: boolean | null
 }
 
 export interface ListingsPage {

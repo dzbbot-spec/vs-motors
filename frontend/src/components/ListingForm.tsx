@@ -20,6 +20,11 @@ export interface ListingFormData {
   vin: string
   country: string
   description: string
+  owners_count: number | null
+  has_accidents: boolean
+  pts_original: boolean
+  service_history: boolean
+  customs_cleared: boolean
 }
 
 interface PhotoEntry {
@@ -36,7 +41,7 @@ interface Props {
   serverError?: string | null
 }
 
-const STEP_LABELS = ['Основное', 'Характеристики', 'Детали', 'Фото и описание']
+const STEP_LABELS = ['Основное', 'Характеристики', 'Детали', 'История', 'Фото и описание']
 
 const TRANSMISSIONS: [string, string][] = [['AUTO','Автомат'],['MANUAL','Механика'],['ROBOT','Робот'],['CVT','Вариатор']]
 const FUELS: [string, string][] = [['PETROL','Бензин'],['DIESEL','Дизель'],['HYBRID','Гибрид'],['ELECTRIC','Электро'],['GAS','Газ']]
@@ -50,6 +55,11 @@ const defaultForm: ListingFormData = {
   mileage: '', transmission: '', fuel_type: '', body_type: '', color: '',
   engine_volume: '', power_hp: '', drive_type: '', vin: '', country: '',
   description: '',
+  owners_count: null,
+  has_accidents: false,
+  pts_original: true,
+  service_history: false,
+  customs_cleared: true,
 }
 
 // Инициализируем spec по уже известным марке/модели (для режима редактирования)
@@ -162,7 +172,7 @@ export default function ListingForm({
 
   const goNext = () => {
     if (!validateStep()) return
-    setStep(s => Math.min(3, s + 1))
+    setStep(s => Math.min(4, s + 1))
   }
 
   const goPrev = () => setStep(s => Math.max(0, s - 1))
@@ -236,7 +246,7 @@ export default function ListingForm({
     <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
       {/* Progress bar */}
       <div className="progress-bar">
-        <div className="progress-bar__fill" style={{ width: `${((step + 1) / 4) * 100}%` }} />
+        <div className="progress-bar__fill" style={{ width: `${((step + 1) / 5) * 100}%` }} />
       </div>
       <div className="step-hint">Шаг {step + 1} из 4 — {STEP_LABELS[step]}</div>
 
@@ -377,15 +387,6 @@ export default function ListingForm({
             </select>
           </div>
           <div className="field">
-            <label>VIN</label>
-            <input
-              value={form.vin}
-              onChange={set('vin')}
-              placeholder="WBA..."
-              style={{ textTransform: 'uppercase' }}
-            />
-          </div>
-          <div className="field">
             <label>Страна происхождения</label>
             <input value={form.country} onChange={set('country')} placeholder="Германия, Япония..." />
           </div>
@@ -399,8 +400,56 @@ export default function ListingForm({
         </div>
       )}
 
-      {/* Step 3: Photos + description */}
+      {/* Step 3: History */}
       {step === 3 && (
+        <div className="form-step">
+          <div className="field">
+            <label>VIN-номер</label>
+            <input
+              value={form.vin}
+              onChange={e => setForm(f => ({ ...f, vin: e.target.value.toUpperCase() }))}
+              placeholder="XTA210930Y2700000"
+              maxLength={17}
+            />
+            <span className="form-hint">17 символов, указан в ПТС и на кузове</span>
+          </div>
+
+          <div className="field">
+            <label>Владельцев по ПТС</label>
+            <div className="owners-row">
+              {[1, 2, 3, 4, 5].map(n => (
+                <button
+                  key={n}
+                  className={`owners-btn${form.owners_count === n ? ' owners-btn--active' : ''}`}
+                  onClick={() => setForm(f => ({ ...f, owners_count: n }))}
+                >
+                  {n === 5 ? '5+' : n}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {([
+            { key: 'has_accidents', label: 'Участвовал в ДТП' },
+            { key: 'pts_original', label: 'ПТС оригинал' },
+            { key: 'service_history', label: 'Сервисная книжка' },
+            { key: 'customs_cleared', label: 'Растаможен' },
+          ] as { key: 'has_accidents' | 'pts_original' | 'service_history' | 'customs_cleared'; label: string }[]).map(({ key, label }) => (
+            <div key={key} className="toggle-row">
+              <span className="toggle-label">{label}</span>
+              <button
+                className={`toggle-btn${form[key] ? ' toggle-btn--on' : ''}`}
+                onClick={() => setForm(f => ({ ...f, [key]: !f[key] }))}
+              >
+                <div className="toggle-thumb" />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Step 4: Photos + description */}
+      {step === 4 && (
         <div className="form-step">
           <div className="field">
             <label>Фотографии</label>
@@ -469,7 +518,7 @@ export default function ListingForm({
             Назад
           </button>
         )}
-        {step < 3 ? (
+        {step < 4 ? (
           <button className="btn btn-primary" onClick={goNext} style={{ flex: 2 }}>
             Далее
           </button>

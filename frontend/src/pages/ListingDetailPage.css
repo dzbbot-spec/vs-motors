@@ -137,6 +137,58 @@
   padding: 16px 12px 8px;
 }
 
+/* ── История автомобиля ── */
+.detail-history {
+  margin: 0 12px;
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+}
+
+.history-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--divider, rgba(0,0,0,0.06));
+}
+.history-row:last-child { border-bottom: none; }
+
+.history-label {
+  font-size: 14px;
+  color: var(--hint, #999);
+}
+
+.history-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text, #000);
+}
+
+.history-value--mono {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+
+.history-badge {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.history-badge--ok {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.history-badge--warn {
+  background: #fff3e0;
+  color: #e65100;
+}
+
 .detail-specs-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;

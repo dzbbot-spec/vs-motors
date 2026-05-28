@@ -45,6 +45,11 @@ export default function EditListingPage() {
       payload.vin = data.vin.trim() || null
       payload.country = data.country.trim() || null
       payload.description = data.description.trim() || null
+      payload.owners_count = data.owners_count
+      payload.has_accidents = data.has_accidents
+      payload.pts_original = data.pts_original
+      payload.service_history = data.service_history
+      payload.customs_cleared = data.customs_cleared
       payload.photos = photos
 
       await api.patch<ListingFull>(`/api/listings/${id}`, payload)
@@ -93,6 +98,11 @@ export default function EditListingPage() {
     vin: listing.vin ?? '',
     country: listing.country ?? '',
     description: listing.description ?? '',
+    owners_count: listing.owners_count ?? null,
+    has_accidents: listing.has_accidents ?? false,
+    pts_original: listing.pts_original ?? true,
+    service_history: listing.service_history ?? false,
+    customs_cleared: listing.customs_cleared ?? true,
   }
 
   return (

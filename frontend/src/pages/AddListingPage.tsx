@@ -32,6 +32,11 @@ export default function AddListingPage() {
         vin: data.vin.trim() || null,
         country: data.country.trim() || null,
         description: data.description.trim() || null,
+        owners_count: data.owners_count,
+        has_accidents: data.has_accidents,
+        pts_original: data.pts_original,
+        service_history: data.service_history,
+        customs_cleared: data.customs_cleared,
         photos,
         status: 'active',
       }

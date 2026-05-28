@@ -460,6 +460,76 @@ input, select, textarea { font: inherit; color: inherit; }
 }
 .btn-contact:active { opacity: 0.6; }
 
+/* ── Форма — подсказка под полем ── */
+.form-hint {
+  font-size: 12px;
+  color: var(--hint);
+  margin-top: 4px;
+}
+
+/* ── Кнопки выбора числа владельцев ── */
+.owners-row {
+  display: flex;
+  gap: 8px;
+}
+
+.owners-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  font-family: inherit;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.owners-btn--active {
+  background: var(--text);
+  color: var(--bg);
+}
+
+/* ── Toggle-переключатели ── */
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--divider);
+}
+.toggle-label {
+  font-size: 15px;
+  color: var(--text);
+}
+.toggle-btn {
+  width: 48px;
+  height: 28px;
+  border-radius: 14px;
+  background: var(--bg-secondary);
+  border: none;
+  padding: 3px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  position: relative;
+  flex-shrink: 0;
+}
+.toggle-btn--on {
+  background: var(--text);
+}
+.toggle-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: white;
+  transition: transform 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.toggle-btn--on .toggle-thumb {
+  transform: translateX(20px);
+}
+
 /* ── Предупреждения валидации ── */
 .spec-warnings {
   background: #fff8e1;

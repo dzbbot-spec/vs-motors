@@ -238,6 +238,51 @@ export default function ListingDetailPage() {
         )}
       </div>
 
+      {/* История автомобиля */}
+      {(listing.vin || listing.owners_count != null || listing.has_accidents != null) && (
+        <>
+          <p className="detail-section-title">История автомобиля</p>
+          <div className="detail-history">
+            {listing.vin && (
+              <div className="history-row">
+                <span className="history-label">VIN</span>
+                <span className="history-value history-value--mono">{listing.vin}</span>
+              </div>
+            )}
+            {listing.owners_count != null && (
+              <div className="history-row">
+                <span className="history-label">Владельцев</span>
+                <span className="history-value">{listing.owners_count === 5 ? '5 и более' : listing.owners_count}</span>
+              </div>
+            )}
+            <div className="history-row">
+              <span className="history-label">ДТП</span>
+              <span className={`history-badge ${listing.has_accidents ? 'history-badge--warn' : 'history-badge--ok'}`}>
+                {listing.has_accidents ? 'Были' : 'Не было'}
+              </span>
+            </div>
+            <div className="history-row">
+              <span className="history-label">ПТС</span>
+              <span className={`history-badge ${listing.pts_original ? 'history-badge--ok' : 'history-badge--warn'}`}>
+                {listing.pts_original ? 'Оригинал' : 'Дубликат'}
+              </span>
+            </div>
+            {listing.service_history && (
+              <div className="history-row">
+                <span className="history-label">Сервисная книжка</span>
+                <span className="history-badge history-badge--ok">Есть</span>
+              </div>
+            )}
+            <div className="history-row">
+              <span className="history-label">Таможня</span>
+              <span className={`history-badge ${listing.customs_cleared ? 'history-badge--ok' : 'history-badge--warn'}`}>
+                {listing.customs_cleared ? 'Растаможен' : 'Не растаможен'}
+              </span>
+            </div>
+          </div>
+        </>
+      )}
+
       {/* Описание */}
       {listing.description && (
         <>
