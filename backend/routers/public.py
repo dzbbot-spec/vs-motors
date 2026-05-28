@@ -6,7 +6,7 @@ from schemas import ListingFull, ListingsPage, ListingShort
 router = APIRouter(prefix="/api")
 
 SHORT = """id, created_at, brand, model, year, price, currency,
-    mileage, transmission, fuel_type, status, photos, views"""
+    mileage, transmission, fuel_type, status, photos, COALESCE(views, 0) as views"""
 
 FULL = SHORT + """, updated_at, body_type, color, engine_volume,
     power_hp, drive_type, vin, country, description,

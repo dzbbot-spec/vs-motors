@@ -19,7 +19,7 @@ FULL = """id, created_at, updated_at, brand, model, year, price, currency,
     mileage, transmission, fuel_type, body_type, color, engine_volume,
     power_hp, drive_type, vin, country, description, status, photos,
     owners_count, has_accidents, pts_original, service_history, customs_cleared,
-    views"""
+    COALESCE(views, 0) as views"""
 
 ALLOWED_MIME = {"image/jpeg", "image/png", "image/webp", "image/heic"}
 
@@ -81,7 +81,7 @@ async def admin_listings():
     async with database.pool.acquire() as conn:
         rows = await conn.fetch(
             """SELECT id, created_at, brand, model, year, price, currency,
-                mileage, transmission, fuel_type, status, photos, views
+                mileage, transmission, fuel_type, status, photos, COALESCE(views, 0) as views
                FROM listings ORDER BY created_at DESC"""
         )
     return [ListingShort(**dict(r)) for r in rows]
