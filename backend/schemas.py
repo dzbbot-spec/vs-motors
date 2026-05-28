@@ -29,11 +29,11 @@ class ListingFull(ListingShort):
     vin: str | None
     country: str | None
     description: str | None
-    owners_count: int | None
-    has_accidents: bool | None
-    pts_original: bool | None
-    service_history: bool | None
-    customs_cleared: bool | None
+    owners_count: int | None = None
+    has_accidents: bool | None = None
+    pts_original: bool | None = None
+    service_history: bool | None = None
+    customs_cleared: bool | None = None
 
 
 class ListingsPage(BaseModel):

@@ -9,7 +9,8 @@ SHORT = """id, created_at, brand, model, year, price, currency,
     mileage, transmission, fuel_type, status, photos"""
 
 FULL = SHORT + """, updated_at, body_type, color, engine_volume,
-    power_hp, drive_type, vin, country, description"""
+    power_hp, drive_type, vin, country, description,
+    owners_count, has_accidents, pts_original, service_history, customs_cleared"""
 
 
 @router.get("/listings", response_model=ListingsPage)

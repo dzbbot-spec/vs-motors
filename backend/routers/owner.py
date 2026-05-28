@@ -17,7 +17,8 @@ router = APIRouter(prefix="/api", dependencies=[Depends(require_owner)])
 
 FULL = """id, created_at, updated_at, brand, model, year, price, currency,
     mileage, transmission, fuel_type, body_type, color, engine_volume,
-    power_hp, drive_type, vin, country, description, status, photos"""
+    power_hp, drive_type, vin, country, description, status, photos,
+    owners_count, has_accidents, pts_original, service_history, customs_cleared"""
 
 ALLOWED_MIME = {"image/jpeg", "image/png", "image/webp", "image/heic"}
 
@@ -41,6 +42,11 @@ class ListingCreate(BaseModel):
     country: str | None = None
     description: str | None = None
     photos: list[str] = []
+    owners_count: int | None = None
+    has_accidents: bool = False
+    pts_original: bool = True
+    service_history: bool = False
+    customs_cleared: bool = True
 
 
 class ListingUpdate(BaseModel):
@@ -62,6 +68,11 @@ class ListingUpdate(BaseModel):
     country: str | None = None
     description: str | None = None
     photos: list[str] | None = None
+    owners_count: int | None = None
+    has_accidents: bool | None = None
+    pts_original: bool | None = None
+    service_history: bool | None = None
+    customs_cleared: bool | None = None
 
 
 @router.get("/admin/listings", response_model=list[ListingShort])
