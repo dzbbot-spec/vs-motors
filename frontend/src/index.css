@@ -265,17 +265,19 @@ input, select, textarea { font: inherit; color: inherit; }
 
 .listing-card__photo {
   position: relative;
-  height: 180px;
+  width: 100%;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
-  background:
-    radial-gradient(140% 120% at 50% 0%,
-      #FBFBFD 0%, #E7E9EF 58%, #D7DAE2 100%);
+  background: #F0EFED;
 }
-.listing-card--grid .listing-card__photo { height: 118px; }
+.listing-card--grid .listing-card__photo {
+  aspect-ratio: 4 / 3;
+}
 
 .listing-card__photo img {
   width: 100%; height: 100%;
   object-fit: cover;
+  object-position: center;
 }
 
 /* Badge "В продаже" / "Продано" */
