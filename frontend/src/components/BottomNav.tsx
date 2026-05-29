@@ -7,9 +7,9 @@ export default function BottomNav() {
   const nav = useNavigate()
 
   return (
-    <nav className="bottom-nav">
+    <nav className="tab-bar">
       <button
-        className={`bottom-nav__item ${pathname === '/' ? 'active' : ''}`}
+        className={`tab-item${pathname === '/' ? ' active' : ''}`}
         onClick={() => nav('/')}
       >
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -22,7 +22,7 @@ export default function BottomNav() {
       </button>
 
       <button
-        className={`bottom-nav__item ${pathname === '/about' ? 'active' : ''}`}
+        className={`tab-item${pathname === '/about' ? ' active' : ''}`}
         onClick={() => nav('/about')}
       >
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -35,7 +35,7 @@ export default function BottomNav() {
 
       {isOwner && (
         <button
-          className={`bottom-nav__item ${pathname === '/admin' ? 'active' : ''}`}
+          className={`tab-item${pathname === '/admin' ? ' active' : ''}`}
           onClick={() => nav('/admin')}
         >
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

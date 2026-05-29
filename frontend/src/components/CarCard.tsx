@@ -16,36 +16,41 @@ interface Props {
 export default function CarCard({ item, layout = 'vertical' }: Props) {
   const nav = useNavigate()
   const photo = item.photos[0] ?? null
-
-  const price = item.price.toLocaleString('ru-RU')
-
-  const meta = [
-    item.year,
-    item.mileage != null ? `${item.mileage.toLocaleString('ru-RU')} км` : null,
-    item.transmission ? (TRANSMISSION[item.transmission] ?? null) : null,
-    item.fuel_type ? (FUEL[item.fuel_type] ?? null) : null,
-  ].filter(Boolean).join(' · ')
+  /* vertical → компактная плитка, horizontal → широкий список */
+  const isGrid = layout === 'vertical'
 
   const cls = [
-    'car-card',
-    item.status === 'sold' ? 'car-card--sold' : '',
-    layout === 'horizontal' ? 'car-card--horizontal' : '',
+    'listing-card',
+    isGrid ? 'listing-card--grid' : '',
+    item.status === 'sold' ? 'listing-card--sold' : '',
   ].filter(Boolean).join(' ')
 
   return (
-    <div className={cls} onClick={() => nav(`/listing/${item.id}`)}>
-      <div className="car-card__photo">
-        {photo && <img src={photo} alt={`${item.brand} ${item.model}`} loading="lazy" />}
-      </div>
-
-      <div className="car-card__body">
-        <div className="car-card__title">{item.brand} {item.model}</div>
-        {meta && <div className="car-card__meta">{meta}</div>}
-        <div className="car-card__footer">
-          <div className="car-card__price">{price} {item.currency}</div>
-          {item.status === 'sold' && <span className="car-card__badge">Продано</span>}
+    <article className={cls} onClick={() => nav(`/listing/${item.id}`)}>
+      <div className="listing-card__photo">
+        {photo && <img src={photo} alt={item.brand} loading="lazy" />}
+        <div className="listing-card__badge">
+          <i></i>
+          {item.status === 'active' ? 'В продаже' : 'Продано'}
         </div>
       </div>
-    </div>
+      <div className="listing-card__body">
+        <p className="listing-card__title">{item.brand} {item.model}</p>
+        <div className="listing-card__specs">
+          {item.year && <span>{item.year}</span>}
+          {item.mileage != null && <span>{item.mileage.toLocaleString('ru-RU')} км</span>}
+          {item.transmission && TRANSMISSION[item.transmission] && (
+            <span>{TRANSMISSION[item.transmission]}</span>
+          )}
+          {item.fuel_type && FUEL[item.fuel_type] && (
+            <span>{FUEL[item.fuel_type]}</span>
+          )}
+        </div>
+        <div className="listing-card__price">
+          {item.price.toLocaleString('ru-RU')}
+          <small>{item.currency || 'RUB'}</small>
+        </div>
+      </div>
+    </article>
   )
 }

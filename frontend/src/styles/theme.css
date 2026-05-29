@@ -1,18 +1,39 @@
 :root {
-  --font: 'Inter', -apple-system, system-ui, sans-serif;
-  --bg: #FFFFFF;
-  --bg-secondary: #F1F5F9;
-  --text: #0F172A;
-  --hint: #64748B;
-  --button: #2563EB;
-  --button-text: #FFFFFF;
-  --divider: #E2E8F0;
-  --border: #CBD5E1;
-  --radius: 14px;
-  --radius-sm: 10px;
-  --radius-pill: 50px;
-  --radius-block: 14px;
-  --shadow-btn: 0 1px 2px rgba(0,0,0,0.05), 0 0 0 1px rgba(0,0,0,0.07);
-  --shadow-card: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.06);
-  --danger: #DC2626;
+  /* ── Новая дизайн-система VS MOTORS (май 2026) ── */
+  --bg:           #EBEDF1;
+  --surface:      #FFFFFF;
+  --surface-2:    #F5F6F9;
+  --ink:          #0D0E12;
+  --ink-soft:     #3A3D45;
+  --muted:        #8A8F9B;
+  --muted-2:      #A9AEB9;
+  --line:         #ECEEF2;
+  --line-2:       #E2E5EB;
+  --accent:       #CFFB4D;
+  --accent-ink:   #15200A;
+  --green:        #1E8A50;
+  --green-bg:     #E6F6EC;
+  --shadow-card:  0 1px 2px rgba(13,14,18,.04), 0 12px 30px -14px rgba(13,14,18,.16);
+  --shadow-soft:  0 1px 2px rgba(13,14,18,.04), 0 6px 16px -10px rgba(13,14,18,.12);
+  --r-lg:         26px;
+  --r-md:         20px;
+  --r-sm:         14px;
+  --ease:         cubic-bezier(.22,.61,.36,1);
+  --font:         'Manrope', sans-serif;
+  --font-display: 'Bricolage Grotesque', sans-serif;
+
+  /* Алиасы для обратной совместимости — используются в forms, buttons, admin */
+  --bg-secondary: var(--surface-2);
+  --text:         var(--ink);
+  --hint:         var(--muted);
+  --button:       var(--ink);
+  --button-text:  #ffffff;
+  --divider:      var(--line);
+  --border:       var(--line-2);
+  --radius:       var(--r-md);
+  --radius-sm:    var(--r-sm);
+  --radius-pill:  50px;
+  --radius-block: var(--r-md);
+  --shadow-btn:   var(--shadow-soft);
+  --danger:       #DC2626;
 }

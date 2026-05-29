@@ -27,11 +27,11 @@ export default function ListingDetailPage() {
   const [shareCopied, setShareCopied] = useState(false)
 
   /* Dot-пагинация галереи */
-  const trackRef = useRef<HTMLDivElement>(null)
+  const heroRef = useRef<HTMLDivElement>(null)
   const [activePhoto, setActivePhoto] = useState(0)
   const handleScroll = () => {
-    if (!trackRef.current) return
-    const idx = Math.round(trackRef.current.scrollLeft / trackRef.current.offsetWidth)
+    if (!heroRef.current) return
+    const idx = Math.round(heroRef.current.scrollLeft / heroRef.current.offsetWidth)
     setActivePhoto(idx)
   }
 
@@ -47,10 +47,17 @@ export default function ListingDetailPage() {
   if (loading) {
     return (
       <div className="detail-page">
-        <div style={{ aspectRatio: '16/9', background: '#e0e0e0' }} />
-        <div style={{ padding: 16 }}>
-          <div className="skeleton-line" style={{ height: 26, width: '70%', marginBottom: 12 }} />
-          <div className="skeleton-line" style={{ height: 32, width: '50%' }} />
+        <div className="d-hero">
+          <button className="d-back" onClick={() => navigate(-1)} aria-label="Назад">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M19 12H5M12 5l-7 7 7 7"/>
+            </svg>
+          </button>
+        </div>
+        <div className="detail-sheet">
+          <div className="detail-grab" />
+          <div className="skeleton-line" style={{ height: 30, width: '70%', marginBottom: 12 }} />
+          <div className="skeleton-line" style={{ height: 40, width: '50%' }} />
         </div>
         <BottomNav />
       </div>
@@ -60,7 +67,17 @@ export default function ListingDetailPage() {
   if (error || !listing) {
     return (
       <div className="detail-page">
-        <div className="error-msg">{error ?? 'Объявление не найдено'}</div>
+        <div className="d-hero">
+          <button className="d-back" onClick={() => navigate(-1)} aria-label="Назад">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M19 12H5M12 5l-7 7 7 7"/>
+            </svg>
+          </button>
+        </div>
+        <div className="detail-sheet">
+          <div className="detail-grab" />
+          <div className="error-msg">{error ?? 'Объявление не найдено'}</div>
+        </div>
         <BottomNav />
       </div>
     )
@@ -92,9 +109,7 @@ export default function ListingDetailPage() {
       navigator.clipboard?.writeText(url).then(() => {
         setShareCopied(true)
         setTimeout(() => setShareCopied(false), 2000)
-      }).catch(() => {
-        window.open(url)
-      })
+      }).catch(() => { window.open(url) })
     }
   }
 
@@ -114,246 +129,282 @@ export default function ListingDetailPage() {
     }
   }
 
+  const photos = listing.photos
+  const isActive = listing.status === 'active'
+
   return (
     <div className="detail-page">
 
-      {/* Галерея */}
-      <div className="detail-gallery">
-        {listing.photos.length > 0 ? (
-          <>
-            <div className="detail-gallery__track" onScroll={handleScroll} ref={trackRef}>
-              {listing.photos.map((url, i) => (
-                <div key={i} className="detail-gallery__slide">
-                  <img src={url} alt="" loading="lazy" />
+      {/* Герой — фото (горизонтальная галерея) */}
+      <div className="d-hero">
+        <div
+          ref={heroRef}
+          onScroll={handleScroll}
+          style={{
+            display: 'flex',
+            width: '100%',
+            height: '100%',
+            overflowX: 'scroll',
+            scrollSnapType: 'x mandatory',
+            scrollbarWidth: 'none',
+          }}
+        >
+          {photos.length > 0
+            ? photos.map((url, i) => (
+                <div key={i} style={{ flexShrink: 0, width: '100%', height: '100%', scrollSnapAlign: 'start' }}>
+                  <img src={url} alt="" loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </div>
-              ))}
-            </div>
-            {listing.photos.length > 1 && (
-              <div className="detail-gallery__dots">
-                {listing.photos.map((_, i) => (
-                  <div
-                    key={i}
-                    className={`detail-gallery__dot${i === activePhoto ? ' detail-gallery__dot--active' : ''}`}
-                  />
-                ))}
-              </div>
-            )}
-          </>
-        ) : (
-          <div className="detail-gallery__no-photo" />
-        )}
-      </div>
-
-      {/* Заголовок, цена, статус */}
-      <div className="detail-card">
-        <div className="detail-title-row">
-          <h1 className="detail-title">{listing.brand} {listing.model} {listing.year}</h1>
-          <button className="detail-share-btn" onClick={handleShare}>
-            {shareCopied ? (
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                <path d="M20 6L9 17l-5-5"/>
-              </svg>
-            ) : (
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13"/>
-              </svg>
-            )}
-          </button>
+              ))
+            : <div style={{ width: '100%', height: '100%' }} />
+          }
         </div>
-        <p className="detail-price">{listing.price.toLocaleString()} {listing.currency}</p>
-        <span className={`detail-status detail-status--${listing.status}`}>
-          {listing.status === 'active' ? 'В продаже' : 'Продано'}
-        </span>
-        {(listing.views ?? 0) > 0 && (
-          <p className="detail-views">{listing.views} просмотров</p>
-        )}
-      </div>
 
-      {/* Кнопки контактов — круглые иконки в ряд */}
-      <div className="detail-contacts">
-        <button className="detail-contact-icon" onClick={() =>
-          window.open(`tg://resolve?domain=${import.meta.env.VITE_OWNER_TG_USERNAME}`)
-        }>
-          <div className="detail-contact-icon__circle">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-              <path d="M21.8 2.15L2.4 9.8c-1.3.52-1.29 1.25-.24 1.57l4.9 1.53 11.37-7.18c.54-.33 1.03-.15.63.21L8.8 16.13l-.37 5.1c.54 0 .78-.25 1.08-.53l2.6-2.52 5.1 3.75c.94.52 1.61.25 1.84-.87l3.33-15.69c.34-1.36-.52-1.97-1.58-1.22z" fill="currentColor"/>
-            </svg>
-          </div>
-          <span className="detail-contact-icon__label">Telegram</span>
+        {/* Кнопка назад */}
+        <button className="d-back" onClick={() => navigate(-1)} aria-label="Назад">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M19 12H5M12 5l-7 7 7 7"/>
+          </svg>
         </button>
 
-        {import.meta.env.VITE_OWNER_WHATSAPP && (
-          <button className="detail-contact-icon" onClick={() =>
-            window.open(`https://wa.me/${import.meta.env.VITE_OWNER_WHATSAPP}`)
-          }>
-            <div className="detail-contact-icon__circle">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                <path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.37 5.07L2 22l5.1-1.34A9.94 9.94 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm5.07 14.07c-.22.62-1.28 1.18-1.76 1.25-.45.07-1.02.1-1.64-.1-.38-.12-.86-.28-1.48-.55-2.6-1.12-4.3-3.74-4.43-3.91-.13-.17-1.07-1.42-1.07-2.71 0-1.29.68-1.92.92-2.18.24-.26.52-.33.7-.33.17 0 .35 0 .5.01.17.01.39-.06.61.47.22.53.76 1.85.83 1.98.07.13.11.29.02.46-.09.17-.13.28-.26.43-.13.15-.27.34-.39.45-.13.12-.26.25-.11.49.15.24.66 1.09 1.42 1.76.97.87 1.79 1.14 2.04 1.27.25.13.39.11.54-.07.15-.18.62-.72.79-.97.17-.25.33-.21.56-.13.22.08 1.42.67 1.66.79.24.12.4.18.46.28.06.1.06.58-.16 1.2z" fill="currentColor"/>
-              </svg>
-            </div>
-            <span className="detail-contact-icon__label">WhatsApp</span>
-          </button>
-        )}
+        {/* Кнопка поделиться */}
+        <button className="d-share" onClick={handleShare} aria-label="Поделиться">
+          {shareCopied ? (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+              <path d="M20 6L9 17l-5-5"/>
+            </svg>
+          ) : (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13"/>
+            </svg>
+          )}
+        </button>
 
-        {import.meta.env.VITE_OWNER_PHONE && (
-          <button className="detail-contact-icon" onClick={() =>
-            window.open(`tel:${import.meta.env.VITE_OWNER_PHONE}`)
-          }>
-            <div className="detail-contact-icon__circle">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                <path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" fill="currentColor"/>
-              </svg>
-            </div>
-            <span className="detail-contact-icon__label">Позвонить</span>
-          </button>
-        )}
-      </div>
-
-      {/* Характеристики */}
-      <p className="detail-section-title">Характеристики</p>
-      <div className="detail-specs-grid">
-        {listing.year && (
-          <div className="detail-spec-block">
-            <p className="detail-spec-label">Год</p>
-            <p className="detail-spec-value">{listing.year}</p>
-          </div>
-        )}
-        {listing.mileage != null && (
-          <div className="detail-spec-block">
-            <p className="detail-spec-label">Пробег</p>
-            <p className="detail-spec-value">{listing.mileage.toLocaleString()} км</p>
-          </div>
-        )}
-        {listing.transmission && (
-          <div className="detail-spec-block">
-            <p className="detail-spec-label">Коробка</p>
-            <p className="detail-spec-value">{TRANSMISSION[listing.transmission] ?? listing.transmission}</p>
-          </div>
-        )}
-        {listing.fuel_type && (
-          <div className="detail-spec-block">
-            <p className="detail-spec-label">Топливо</p>
-            <p className="detail-spec-value">{FUEL[listing.fuel_type] ?? listing.fuel_type}</p>
-          </div>
-        )}
-        {listing.body_type && (
-          <div className="detail-spec-block">
-            <p className="detail-spec-label">Кузов</p>
-            <p className="detail-spec-value">{BODY[listing.body_type] ?? listing.body_type}</p>
-          </div>
-        )}
-        {listing.drive_type && (
-          <div className="detail-spec-block">
-            <p className="detail-spec-label">Привод</p>
-            <p className="detail-spec-value">{DRIVE[listing.drive_type] ?? listing.drive_type}</p>
-          </div>
-        )}
-        {listing.engine_volume && (
-          <div className="detail-spec-block">
-            <p className="detail-spec-label">Объём</p>
-            <p className="detail-spec-value">{listing.engine_volume} л</p>
-          </div>
-        )}
-        {listing.power_hp && (
-          <div className="detail-spec-block">
-            <p className="detail-spec-label">Мощность</p>
-            <p className="detail-spec-value">{listing.power_hp} л.с.</p>
-          </div>
-        )}
-        {listing.color && (
-          <div className="detail-spec-block">
-            <p className="detail-spec-label">Цвет</p>
-            <p className="detail-spec-value">{listing.color}</p>
-          </div>
-        )}
-        {listing.country && (
-          <div className="detail-spec-block">
-            <p className="detail-spec-label">Страна</p>
-            <p className="detail-spec-value">{listing.country}</p>
+        {/* Точки пагинации */}
+        {photos.length > 1 && (
+          <div className="d-dots">
+            {photos.map((_, i) => (
+              <div key={i} className={`d-dot${i === activePhoto ? ' d-dot--active' : ''}`} />
+            ))}
           </div>
         )}
       </div>
 
-      {/* История автомобиля */}
-      {(listing.vin || listing.owners_count != null || listing.has_accidents != null) && (
-        <>
-          <p className="detail-section-title">История автомобиля</p>
-          <div className="detail-history">
-            {listing.vin && (
-              <div className="history-row">
-                <span className="history-label">VIN</span>
-                <span className="history-value history-value--mono">{listing.vin}</span>
-              </div>
-            )}
-            {listing.owners_count != null && (
-              <div className="history-row">
-                <span className="history-label">Владельцев</span>
-                <span className="history-value">{listing.owners_count === 5 ? '5 и более' : listing.owners_count}</span>
-              </div>
-            )}
-            <div className="history-row">
-              <span className="history-label">ДТП</span>
-              <span className={`history-badge ${listing.has_accidents ? 'history-badge--warn' : 'history-badge--ok'}`}>
-                {listing.has_accidents ? 'Были' : 'Не было'}
-              </span>
+      {/* Sheet */}
+      <div className="detail-sheet">
+        <div className="detail-grab" />
+
+        {/* Главная карточка */}
+        <div className="detail-head-card">
+          <div className="top">
+            <div>
+              <div className="title">{listing.brand} {listing.model}</div>
+              {listing.year && <div className="year-sub">{listing.year} год</div>}
             </div>
-            <div className="history-row">
-              <span className="history-label">ПТС</span>
-              <span className={`history-badge ${listing.pts_original ? 'history-badge--ok' : 'history-badge--warn'}`}>
-                {listing.pts_original ? 'Оригинал' : 'Дубликат'}
-              </span>
-            </div>
-            {listing.service_history && (
-              <div className="history-row">
-                <span className="history-label">Сервисная книжка</span>
-                <span className="history-badge history-badge--ok">Есть</span>
-              </div>
-            )}
-            <div className="history-row">
-              <span className="history-label">Таможня</span>
-              <span className={`history-badge ${listing.customs_cleared ? 'history-badge--ok' : 'history-badge--warn'}`}>
-                {listing.customs_cleared ? 'Растаможен' : 'Не растаможен'}
-              </span>
+            <div className={`detail-status-badge${isActive ? '' : ' detail-status-badge--sold'}`}>
+              <i></i>
+              {isActive ? 'В продаже' : 'Продано'}
             </div>
           </div>
-        </>
-      )}
 
-      {/* Описание */}
-      {listing.description && (
-        <>
-          <p className="detail-section-title">Описание</p>
-          <div className="detail-desc-card">{listing.description}</div>
-        </>
-      )}
+          <div className="detail-price">
+            {listing.price.toLocaleString('ru-RU')}
+            <small>{listing.currency || 'RUB'}</small>
+            {isActive && <span className="acc" />}
+          </div>
 
-      {/* Кнопки владельца */}
-      {isOwner && (
-        <div className="detail-owner-actions">
+          {(listing.views ?? 0) > 0 && (
+            <div className="detail-views">{listing.views} просмотров</div>
+          )}
+
+          {/* Кнопки контактов */}
+          <div className="detail-contacts">
+            <a
+              className="c-tg"
+              onClick={() => window.open(`tg://resolve?domain=${import.meta.env.VITE_OWNER_TG_USERNAME}`)}
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M21.9 4.3 18.6 20c-.2 1-.9 1.3-1.8.8l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.3-4.9 9-8.1c.4-.3-.1-.5-.6-.2L6 13.4l-4.8-1.5c-1-.3-1-1 .2-1.5L20.6 2.6c.9-.3 1.6.2 1.3 1.7z"/>
+              </svg>
+              Telegram
+            </a>
+            {import.meta.env.VITE_OWNER_WHATSAPP && (
+              <a
+                className="c-wa"
+                onClick={() => window.open(`https://wa.me/${import.meta.env.VITE_OWNER_WHATSAPP}`)}
+              >
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.5A10 10 0 1 0 12 2z"/>
+                </svg>
+                WhatsApp
+              </a>
+            )}
+            {import.meta.env.VITE_OWNER_PHONE && (
+              <a
+                className="c-call"
+                onClick={() => window.open(`tel:${import.meta.env.VITE_OWNER_PHONE}`)}
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6z"/>
+                </svg>
+                Позвонить
+              </a>
+            )}
+          </div>
+        </div>
+
+        {/* Характеристики */}
+        <div className="sec-label">Характеристики</div>
+        <div className="spec-grid">
+          {listing.year && (
+            <div className="spec-block"><div className="k">Год</div><div className="v">{listing.year}</div></div>
+          )}
+          {listing.mileage != null && (
+            <div className="spec-block"><div className="k">Пробег</div><div className="v">{listing.mileage.toLocaleString('ru-RU')} км</div></div>
+          )}
+          {listing.transmission && (
+            <div className="spec-block"><div className="k">Коробка</div><div className="v">{TRANSMISSION[listing.transmission] ?? listing.transmission}</div></div>
+          )}
+          {listing.fuel_type && (
+            <div className="spec-block"><div className="k">Топливо</div><div className="v">{FUEL[listing.fuel_type] ?? listing.fuel_type}</div></div>
+          )}
+          {listing.body_type && (
+            <div className="spec-block"><div className="k">Кузов</div><div className="v">{BODY[listing.body_type] ?? listing.body_type}</div></div>
+          )}
+          {listing.drive_type && (
+            <div className="spec-block"><div className="k">Привод</div><div className="v">{DRIVE[listing.drive_type] ?? listing.drive_type}</div></div>
+          )}
+          {listing.engine_volume && (
+            <div className="spec-block"><div className="k">Объём</div><div className="v">{listing.engine_volume} л</div></div>
+          )}
+          {listing.power_hp && (
+            <div className="spec-block"><div className="k">Мощность</div><div className="v">{listing.power_hp} л.с.</div></div>
+          )}
+          {listing.color && (
+            <div className="spec-block"><div className="k">Цвет</div><div className="v">{listing.color}</div></div>
+          )}
+          {listing.country && (
+            <div className="spec-block"><div className="k">Страна</div><div className="v">{listing.country}</div></div>
+          )}
+        </div>
+
+        {/* История автомобиля */}
+        {(listing.vin || listing.owners_count != null || listing.has_accidents != null) && (
+          <>
+            <div className="sec-label">История</div>
+            <div className="history-card">
+              {listing.vin && (
+                <div className="history-row">
+                  <div className="l"><div className="ic">VIN</div>VIN-номер</div>
+                  <span style={{ fontFamily: 'monospace', fontSize: 13, fontWeight: 600 }}>{listing.vin}</span>
+                </div>
+              )}
+              {listing.owners_count != null && (
+                <div className="history-row">
+                  <div className="l"><div className="ic">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                    </svg>
+                  </div>Владельцев</div>
+                  <div className="hpill">{listing.owners_count === 5 ? '5+' : listing.owners_count}</div>
+                </div>
+              )}
+              {listing.has_accidents != null && (
+                <div className="history-row">
+                  <div className="l"><div className="ic">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                      <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                  </div>ДТП</div>
+                  <div className={`hpill${listing.has_accidents ? ' hpill--warn' : ''}`}>
+                    {listing.has_accidents ? 'Были' : 'Не было'}
+                  </div>
+                </div>
+              )}
+              {listing.pts_original != null && (
+                <div className="history-row">
+                  <div className="l"><div className="ic">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+                    </svg>
+                  </div>ПТС</div>
+                  <div className={`hpill${listing.pts_original ? '' : ' hpill--warn'}`}>
+                    {listing.pts_original ? 'Оригинал' : 'Дубликат'}
+                  </div>
+                </div>
+              )}
+              {listing.service_history && (
+                <div className="history-row">
+                  <div className="l"><div className="ic">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                      <polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                    </svg>
+                  </div>Сервисная книжка</div>
+                  <div className="hpill">Есть</div>
+                </div>
+              )}
+              {listing.customs_cleared != null && (
+                <div className="history-row">
+                  <div className="l"><div className="ic">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                      <rect x="1" y="3" width="15" height="13" rx="1"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+                    </svg>
+                  </div>Таможня</div>
+                  <div className={`hpill${listing.customs_cleared ? '' : ' hpill--warn'}`}>
+                    {listing.customs_cleared ? 'Растаможен' : 'Не растаможен'}
+                  </div>
+                </div>
+              )}
+            </div>
+          </>
+        )}
+
+        {/* Описание */}
+        {listing.description && (
+          <>
+            <div className="sec-label">Описание</div>
+            <div className="desc-card">{listing.description}</div>
+          </>
+        )}
+
+        {/* Кнопки владельца */}
+        {isOwner && (
+          <>
+            <div className="sec-label">Управление</div>
+            <div className="owner-actions">
+              <button className="owner-btn" onClick={() => navigate(`/listing/${listing.id}/edit`)}>
+                Редактировать
+              </button>
+              <button className="owner-btn" onClick={handleToggleStatus} disabled={toggling}>
+                {toggling ? '...' : listing.status === 'active' ? 'Продано' : 'В продаже'}
+              </button>
+              <button className="owner-btn owner-btn--danger" onClick={handleDelete} disabled={deleting}>
+                {deleting ? '...' : 'Удалить'}
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* Buy bar — только для покупателей */}
+      {!isOwner && (
+        <div className="buy-bar">
+          <div className="p">
+            <span>Цена</span>
+            <b>{listing.price.toLocaleString('ru-RU')} {listing.currency || 'RUB'}</b>
+          </div>
           <button
-            className="detail-owner-btn"
-            onClick={() => navigate(`/listing/${listing.id}/edit`)}
+            className="btn-apply"
+            onClick={() => window.open(`tg://resolve?domain=${import.meta.env.VITE_OWNER_TG_USERNAME}`)}
           >
-            Редактировать
-          </button>
-          <button
-            className="detail-owner-btn"
-            onClick={handleToggleStatus}
-            disabled={toggling}
-          >
-            {toggling ? '...' : listing.status === 'active' ? 'Продано' : 'В продаже'}
-          </button>
-          <button
-            className="detail-owner-btn detail-owner-btn--danger"
-            onClick={handleDelete}
-            disabled={deleting}
-          >
-            {deleting ? '...' : 'Удалить'}
+            Оставить заявку
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5 12h14M13 6l6 6-6 6"/>
+            </svg>
           </button>
         </div>
       )}
 
-      <div style={{ height: '80px' }} />
       <BottomNav />
     </div>
   )
